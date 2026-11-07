@@ -49,7 +49,7 @@ export function LandingHeader() {
           className={`hidden items-center gap-1 rounded-full border p-1 text-sm backdrop-blur-md transition-all duration-300 md:flex ${scrolled ? "border-line bg-paper-raised/80 shadow-[0_10px_40px_-20px_var(--accent)]" : "border-line/70 bg-paper-raised/50"}`}
         >
           {LINKS.map(([label, href]) => (
-            <a key={href} href={href} onMouseEnter={() => setHover(href)} onClick={() => tick()} className="relative rounded-full px-4 py-1.5 text-ink-soft transition-colors hover:text-ink">
+            <a key={href} href={href} onMouseEnter={() => setHover(href)} onClick={() => tick()} className="relative whitespace-nowrap rounded-full px-4 py-1.5 text-ink-soft transition-colors hover:text-ink">
               {hover === href && <motion.span layoutId="nav-hover" className="absolute inset-0 rounded-full bg-accent/10 ring-1 ring-accent/30" transition={{ type: "spring", stiffness: 400, damping: 32 }} />}
               <span className="relative">{label}</span>
             </a>
@@ -62,8 +62,7 @@ export function LandingHeader() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:hidden" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            <span className="sm:hidden">Tour</span>
-            <span className="hidden sm:inline">Take the tour</span>
+            Tour
           </a>
           <InstallApp />
           <Link href={signedIn ? "/home" : "/login?mode=signup"} onClick={() => transition()} className="glow-btn flex h-9 items-center whitespace-nowrap rounded-full px-4 text-sm sm:px-5">
