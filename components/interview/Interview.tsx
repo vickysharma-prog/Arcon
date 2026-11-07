@@ -32,7 +32,7 @@ const SAY = {
   typeOwn: { en: "Something else? Type it", hi: "कुछ और? लिखिए", hinglish: "Kuch aur? Type karo" },
   pictures: { en: "Pick one, or type your own", hi: "एक चुनिए, या अपना लिखिए", hinglish: "Ek chuno, ya apna type karo" },
   yourStyle: { en: "Your space style", hi: "आपकी स्पेस स्टाइल", hinglish: "Aapka space style" },
-  styleFrom: { en: "Read by Qloo from", hi: "Qloo ने पढ़ा", hinglish: "Qloo ne padha" },
+  styleFrom: { en: "Read from", hi: "इनसे पढ़ा", hinglish: "Inse padha" },
   designNow: { en: "Now design my space", hi: "अब मेरा स्पेस डिज़ाइन करें", hinglish: "Ab mera space design karo" },
   designing: { en: "Now designing your space", hi: "अब आपका स्पेस डिज़ाइन हो रहा है", hinglish: "Ab aapka space design ho raha hai" },
   done: { en: "Done", hi: "हो गया", hinglish: "Ho gaya" },
@@ -44,7 +44,7 @@ const SAY = {
   notSure: { en: "Not sure, use a typical size", hi: "पता नहीं, आम साइज़ लें", hinglish: "Pata nahi, typical size le lo" },
   width: { en: "Width", hi: "चौड़ाई", hinglish: "Width" },
   depth: { en: "Depth", hi: "गहराई", hinglish: "Depth" },
-  looking: { en: "Looking it up in Qloo…", hi: "Qloo में ढूँढ रहे हैं…", hinglish: "Qloo mein dhoondh rahe hain…" },
+  looking: { en: "Looking it up…", hi: "ढूँढ रहे हैं…", hinglish: "Dhoondh rahe hain…" },
   found: { en: "We found", hi: "हमें मिला", hinglish: "Humein mila" },
   thatsIt: { en: "Yes, that's it", hi: "हाँ, यही", hinglish: "Haan, yehi" },
   notIt: { en: "Not it?", hi: "यह नहीं?", hinglish: "Yeh nahi?" },
@@ -77,7 +77,7 @@ export function Interview() {
     return () => clearTimeout(go);
   }, [projectId, router]);
   const [taste, setTaste] = useState<TasteView | null>(null);
-  // The judges' replay (/start?demo=1): Maya's answers play themselves, at 2x unless slowed to 1x; nothing is saved.
+  // The tour's replay (/start?demo=1): Maya's answers play themselves, at 2x unless slowed to 1x; nothing is saved.
   const [replay, setReplay] = useState(false);
   const [speed, setSpeed] = useState(2);
   const [ghost, setGhost] = useState<Answer | null>(null);
@@ -557,7 +557,7 @@ export function Interview() {
                     </>
                   ) : (
                     <div className="mx-auto mt-6 w-fit text-left text-sm">
-                      <TypeLog lines={["Reading your picks with Qloo", "Finding the words your style is made of", "Matching brands to your taste"]} done={false} />
+                      <TypeLog lines={["Reading your picks", "Finding the words your style is made of", "Matching brands to your taste"]} done={false} />
                     </div>
                   )}
                   {replay ? (
@@ -577,7 +577,7 @@ export function Interview() {
                   </div>
                   <h1 className="mt-6 font-serif text-3xl sm:text-4xl">{projectId ? say("ready") : say("building")}</h1>
                   <div className="mx-auto mt-6 w-fit text-left text-sm">
-                    <TypeLog lines={["Confirming what you love with Qloo", "Reading your taste into style words", "Saving your project", "Handing over to the designer"]} done={!!projectId} />
+                    <TypeLog lines={["Confirming what you love", "Reading your taste into style words", "Saving your project", "Handing over to the designer"]} done={!!projectId} />
                   </div>
                   {finishing === "failed" && (
                     <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">

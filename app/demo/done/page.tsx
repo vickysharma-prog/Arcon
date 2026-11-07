@@ -6,9 +6,9 @@ import { TOUR } from "@/lib/demo/tour";
 
 export const metadata: Metadata = { title: "Thank you · Arcon" };
 
-// The end of the judges' tour: the story in five lines, then the way to try it on a space of their own.
+// The end of the tour: the story in five lines, then the way to try it on a space of their own.
 const STORY = [
-  ["Taste", "Maya talked about her family and tapped three things she loves. Qloo turned them into a style: words, materials, brands, art and a playlist, each with its source."],
+  ["Taste", "Maya talked about her family and tapped three things she loves. Arcon turned them into a style: words, materials, brands, art and a playlist, each with its source."],
   ["Design", "Arcon drew three plans that fit how she lives, then the 3D, a budget in dollars, a shopping list and the drawings for her builder."],
   ["Team", "Lena the architect and Mike the builder worked from the same project: one thread, the quote, the site, every fee and sign-off."],
   ["Keys", "Ana's apartment went from snag list to handover, and Sam's café was read against the people already on its street."],
@@ -25,7 +25,7 @@ export default function Done() {
         </div>
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.3em] text-accent">The end of the tour</p>
         <h1 className="mt-3 font-serif text-4xl leading-tight sm:text-5xl">
-          <Decode text="Thank you, judges." speed={30} />
+          <Decode text="Thank you for taking the tour." speed={30} />
         </h1>
         <p className="mx-auto mt-4 max-w-xl text-lg text-ink-soft">In {TOUR.length} stops you saw one home go from a conversation to its keys, and a café read against its street.</p>
       </div>

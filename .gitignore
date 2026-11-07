@@ -28,7 +28,7 @@ npm-debug.log*
 __pycache__/
 .venv/
 
-# Qloo response data must never be in a public repo (hackathon rules)
+# Taste API response data must never be in a public repo (data terms)
 .qloo-cache/
 fixtures/qloo/
 .output/
@@ -36,3 +36,6 @@ fixtures/qloo/
 # Local working notes (kept off the public repo)
 state.md
 private/
+
+# working log, kept locally
+progress.md

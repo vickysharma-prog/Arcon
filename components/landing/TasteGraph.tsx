@@ -86,7 +86,7 @@ export function TasteGraph({ loves, tags, makes, links, on, onPick }: { loves: L
         {!still && <span aria-hidden className="absolute h-28 w-28 animate-ping rounded-full border border-accent/30" style={{ animationDuration: "2.6s" }} />}
         <div className="relative grid h-24 w-24 place-items-center rounded-full border border-accent/50 bg-paper text-center shadow-[0_0_60px_-10px_var(--accent)]">
           <span className="font-mono text-[9px] uppercase leading-tight tracking-[0.2em] text-accent">
-            Qloo
+            Arcon
             <br />
             taste AI
           </span>

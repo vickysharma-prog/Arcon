@@ -95,7 +95,7 @@ export function BudgetStep({ tier, onTier, id, layout, location, interview, brie
         <h2 id="tier" className="font-serif text-2xl">Quality</h2>
         {taste === null ? (
           <div className="mt-2">
-            <Scanning label="Reading the price of what you love from Qloo" />
+            <Scanning label="Reading the price of what you love" />
           </div>
         ) : taste.signals.length ? (
           <p className="mt-2 text-sm">

@@ -11,7 +11,7 @@ import type { Neighbourhood as Read } from "@/lib/neighbourhood/fetch";
 // The neighbourhood read for a business: the same kind of places around the site, ranked by Qloo for the owner's
 // taste and the crowd they pick, what those favourites look like, and how strongly the area shares the taste.
 export function Neighbourhood({ id }: { id: string }) {
-  // a link to #neighbourhood (the judges' tour) lands here once the section is on the page
+  // a link to #neighbourhood (the tour) lands here once the section is on the page
   useEffect(() => {
     if (location.hash !== "#neighbourhood") return;
     // a little above the heading, so it isn't tucked under the top bar; pictures above it still loading push it down,
@@ -57,13 +57,13 @@ export function Neighbourhood({ id }: { id: string }) {
 
   return (
     <section className="mt-12" aria-labelledby="neighbourhood" aria-busy={!read}>
-      <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Read by Qloo</p>
+      <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Read from the street</p>
       <h2 id="neighbourhood" className="mt-1 font-serif text-3xl">
         <Decode text="Your neighbourhood" />
       </h2>
       <p className="mt-1 text-sm text-ink-soft">
         {read
-          ? `The ${read.what} ${read.near ? "around" : "across"} ${read.where}, ranked by Qloo for your taste${crowd === "all" ? "" : ` and a crowd ${CROWDS[crowd].label.toLowerCase()}`}.`
+          ? `The ${read.what} ${read.near ? "around" : "across"} ${read.where}, ranked for your taste${crowd === "all" ? "" : ` and a crowd ${CROWDS[crowd].label.toLowerCase()}`}.`
           : "Reading the places around your site…"}
       </p>
 
@@ -102,11 +102,11 @@ export function Neighbourhood({ id }: { id: string }) {
               ) : avg !== null ? (
                 <>
                   <p className="mt-2 font-serif text-2xl">{avg}% match</p>
-                  <p className="mt-1 text-sm text-ink-soft">How closely the favourites around here match your taste, on average, by Qloo.</p>
+                  <p className="mt-1 text-sm text-ink-soft">How closely the favourites around here match your taste, on average.</p>
                   <Bar pct={avg} className="mt-3 h-1.5 bg-accent" />
                 </>
               ) : (
-                <p className="mt-2 text-sm text-ink-soft">Qloo reads the places below one by one.</p>
+                <p className="mt-2 text-sm text-ink-soft">Arcon reads the places below one by one.</p>
               )}
             </HudCard>
             <HudCard className="p-5" delay={0.08}>
@@ -135,7 +135,7 @@ export function Neighbourhood({ id }: { id: string }) {
                     const s = saidLine(read.said, read.hint);
                     return s && <p className={`mt-2 text-sm ${s.same ? "text-leaf" : "text-ink-soft"}`}>{s.same ? `✓ ${s.text} Your plan follows it.` : `${s.text} Your plan follows your answer.`}</p>;
                   })()}
-                  <p className="mt-1 text-xs text-ink-soft">From the café you love, as Qloo knows it.</p>
+                  <p className="mt-1 text-xs text-ink-soft">From the café you love.</p>
                 </>
               ) : (
                 <p className="mt-2 text-sm text-ink-soft">Your plan follows how you said it runs in the interview.</p>
@@ -168,7 +168,7 @@ export function Neighbourhood({ id }: { id: string }) {
               </motion.li>
             ))}
           </ul>
-          {read.places.length === 0 && <p className="mt-4 text-sm text-ink-soft">Qloo knows few {read.what} around here yet.</p>}
+          {read.places.length === 0 && <p className="mt-4 text-sm text-ink-soft">Arcon knows few {read.what} around here yet.</p>}
         </>
       )}
     </section>

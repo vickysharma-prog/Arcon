@@ -1,4 +1,4 @@
-// Keeps the judges' demo sites looking like live sites on whatever day they're opened: moves the phases so Maya's
+// Keeps the tour's demo sites looking like live sites on whatever day they're opened: moves the phases so Maya's
 // current phase started three weeks ago and Ana's last one ends in ten days, marks the crew on site from three weeks
 // back to six weeks ahead, and stocks the materials (done phases used up, the current one delivered and half used,
 // later ones on order). Safe to run again any time; run it before judging.

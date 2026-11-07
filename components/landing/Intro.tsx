@@ -136,7 +136,7 @@ export function Intro() {
             ))}
           </p>
           <p className="intro-letter mt-4 font-mono text-[11px] uppercase tracking-[0.4em] text-ink-soft" style={{ animationDelay: "1300ms" }}>
-            AI architect · Powered by Qloo
+            AI architect · Built around your taste
           </p>
           <div className="mt-6 h-px w-48 overflow-hidden bg-line">
             <div className="intro-bar h-px bg-gradient-to-r from-btn to-accent" />

@@ -2,7 +2,6 @@ import { Hero, LandingHeader } from "@/components/landing/Hero";
 import { Audience, Faq, Features, FinalCall, Footer, HowItWorks, Market, Pricing, TasteFlow } from "@/components/landing/Sections";
 import { QlooStrip } from "@/components/landing/QlooStrip";
 import { PlansDemo } from "@/components/landing/PlansDemo";
-import { Film } from "@/components/landing/Film";
 import { ForPros, Trust } from "@/components/landing/ForPros";
 
 export default function Home() {
@@ -12,7 +11,6 @@ export default function Home() {
       <main className="flex-1">
         <Hero />
         <QlooStrip />
-        <Film />
         <HowItWorks />
         <PlansDemo />
         <TasteFlow />

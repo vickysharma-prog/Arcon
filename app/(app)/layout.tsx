@@ -5,7 +5,7 @@ import { AppShell } from "@/components/shell/AppShell";
 import { PageLoading } from "@/components/fx/PageLoading";
 
 // The signed-in app: home, projects, account and the pros directory sit inside the sidebar, which stays put while
-// the page on the right changes. Guests (a shared project, a judge with no account) get the pages as before, with
+// the page on the right changes. Guests (a shared project, a visitor with no account) get the pages as before, with
 // the site header. The check is the signed cookie alone, so nothing waits on the database here.
 
 async function Gate({ children }: { children: ReactNode }) {

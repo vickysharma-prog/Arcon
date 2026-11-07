@@ -96,11 +96,11 @@ export function Quiz() {
       <AnimatePresence mode="wait">
         {step === -1 && (
           <motion.section key="start" initial={still ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} className="py-10 text-center">
-            <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Read by Qloo</p>
+            <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Read from your taste</p>
             <h1 className="mt-3 font-serif text-5xl sm:text-6xl">
               <Decode text="What's your space style?" />
             </h1>
-            <p className="mx-auto mt-4 max-w-md text-lg text-ink-soft">Three taps: a place, a brand and something you love to watch or play. Qloo reads your taste from them.</p>
+            <p className="mx-auto mt-4 max-w-md text-lg text-ink-soft">Three taps: a place, a brand and something you love to watch or play. Arcon reads your taste from them.</p>
             <button
               onClick={() => {
                 tick();
@@ -184,7 +184,7 @@ export function Quiz() {
                       <Decode text={card.style} />
                     </h2>
                     <p className="mt-2 text-ink-soft">
-                      Read by Qloo from {card.picks.map((p) => p.name).join(", ")}.
+                      Read from {card.picks.map((p) => p.name).join(", ")}.
                     </p>
                     {card.words.length > 0 && (
                       <ul className="mt-5 flex flex-wrap gap-2" aria-label="The words your style is made of">

@@ -1,6 +1,6 @@
-// Builds the judges' demo world through the real app, as the people in it: Lena's studio in Los Angeles with three
+// Builds the demo world through the real app, as the people in it: Lena's studio in Los Angeles with three
 // clients (Maya's house being built, the Parks' house waiting for approval, Ana's apartment in its last week), Mike the
-// builder, and Sam's café in Brooklyn. Every step goes through the app's own routes, so what judges see is what a
+// builder, and Sam's café in Brooklyn. Every step goes through the app's own routes, so what visitors see is what a
 // real run makes. Re-running replaces the old demo projects. The design step calls the model (four designs).
 // Run with the app up (npx next build && npx next start -p 3000):
 //   node --env-file=.env.local --env-file=.env scripts/demo-world.ts [base url]

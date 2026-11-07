@@ -155,7 +155,7 @@ export function WalkthroughStep({
   const ended = progress >= 1;
   const floors = layout.floors.length;
 
-  // the judges' tour opens the 3D itself (#walk), not the heading above it
+  // the tour opens the 3D itself (#walk), not the heading above it
   useEffect(() => {
     const h = window.location.hash;
     if (h === "#look" || h === "#inside") setMode("orbit");
@@ -598,7 +598,7 @@ function MoodPill({ room, mood, className }: { room: string; mood?: Mood; classN
           exit={{ opacity: 0, y: -6 }}
           className={`pointer-events-none absolute z-20 max-w-[min(92%,440px)] rounded-2xl bg-paper/90 px-4 py-2 text-sm backdrop-blur ${className}`}
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Mood, read by Qloo</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Mood, read from your taste</p>
           <p className="mt-0.5">
             <span className="font-medium capitalize">{mood.word}</span>
             <span className="text-ink-soft"> · from {mood.from}</span>

@@ -56,14 +56,14 @@ export function LandingHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2 justify-self-end sm:gap-2.5">
-          {/* the judges' tour: one click, nothing to sign up for */}
+          {/* the tour: one click, nothing to sign up for */}
           <a href="/demo" onClick={() => tick()} className="flex h-9 items-center gap-2 whitespace-nowrap rounded-full border border-accent/50 bg-accent/5 px-3 text-sm text-accent transition hover:-translate-y-0.5 hover:bg-accent/10 hover:shadow-[0_10px_30px_-12px_var(--accent)]">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:hidden" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
             </span>
-            <span className="sm:hidden">Judges</span>
-            <span className="hidden sm:inline">For judges</span>
+            <span className="sm:hidden">Tour</span>
+            <span className="hidden sm:inline">Take the tour</span>
           </a>
           <InstallApp />
           <Link href={signedIn ? "/home" : "/login?mode=signup"} onClick={() => transition()} className="glow-btn flex h-9 items-center whitespace-nowrap rounded-full px-4 text-sm sm:px-5">
@@ -109,7 +109,7 @@ export function Hero() {
             transition={{ delay: 0.2 }}
             className="font-mono text-[11px] uppercase tracking-[0.2em] text-accent sm:text-xs sm:tracking-[0.3em]"
           >
-            AI architect, powered by Qloo
+            AI architect, built around your taste
           </motion.p>
           <h1 className="mt-6 font-serif text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
             Spaces designed around
@@ -137,7 +137,7 @@ export function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60 motion-reduce:hidden" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-accent" />
               </span>
-              For judges
+              Take the tour
             </a>
             <Link
               href="/start"

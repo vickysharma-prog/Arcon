@@ -53,12 +53,12 @@ export function QlooStrip() {
 
   const r = reads?.[i];
   return (
-    <section aria-label="Taste read by Qloo" className="relative border-y border-line bg-paper-raised/60">
+    <section aria-label="Taste, read live" className="relative border-y border-line bg-paper-raised/60">
       <div className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-6 sm:px-8 lg:flex-row lg:items-center lg:gap-8">
         <div className="flex shrink-0 items-center justify-between gap-4 lg:block lg:w-44">
           <p className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">
             <span className={`h-1.5 w-1.5 rounded-full ${live ? "animate-pulse bg-leaf" : "bg-ink-soft"}`} />
-            {live ? "Live from Qloo" : "Example"}
+            {live ? "Live" : "Example"}
           </p>
           {reads && reads.length > 1 && (
             <div className="flex gap-1.5 lg:mt-3" role="tablist" aria-label="Examples">
@@ -137,7 +137,7 @@ export function QlooStrip() {
                 </div>
               </motion.div>
             ) : (
-              <p className="py-6 font-mono text-xs text-ink-soft">&gt; asking Qloo…</p>
+              <p className="py-6 font-mono text-xs text-ink-soft">&gt; reading taste…</p>
             )}
           </AnimatePresence>
         </div>

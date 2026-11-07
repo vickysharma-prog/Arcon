@@ -60,7 +60,7 @@ export function ProsDirectory() {
         <Decode text={role === "architect" ? "Architects who fit your taste" : "Builders who fit your taste"} />
       </h1>
       <p className="mt-2 max-w-2xl text-ink-soft">
-        Ranked by how close their past work on Arcon is to your Qloo taste{data?.city ? `, with pros near ${data.city.split(",")[0]} a little higher` : ""}. Ask one and they see your design before saying yes.
+        Ranked by how close their past work on Arcon is to your taste{data?.city ? `, with pros near ${data.city.split(",")[0]} a little higher` : ""}. Ask one and they see your design before saying yes.
       </p>
       <div role="tablist" aria-label="Kind of pro" className="mt-6 inline-flex gap-1 rounded-full border border-line p-1 text-sm">
         {(["architect", "builder"] as const).map((r) => (

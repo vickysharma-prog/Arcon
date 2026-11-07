@@ -28,7 +28,7 @@ export async function POST(request: Request) {
   const body = Body.safeParse(await request.json().catch(() => null));
   if (!body.success) return Response.json({ error: "Something went wrong with your answers. Please start again." }, { status: 400 });
   const answers = body.data.answers as Answers;
-  // a judge trying Arcon after the tour gets their design in full (see /demo?exit=start)
+  // a visitor trying Arcon after the tour gets their design in full (see /demo?exit=start)
   const judge = readCookie(request.headers.get("cookie"), JUDGE_COOKIE) === "1";
   // Filling a pro's project: only its owner (the architect or builder) or its client, and only while it waits.
   const into = body.data.projectId ? await accessTo(body.data.projectId, request.headers.get("cookie")) : null;

@@ -13,7 +13,7 @@ export function CookieNotice() {
   useEffect(() => {
     setTop(/^\/(start|quiz)/.test(location.pathname));
     try {
-      // the judges' tour has its own bar at the bottom; the notice would sit under it
+      // the tour has its own bar at the bottom; the notice would sit under it
       setShow(localStorage.getItem(KEY) !== "seen" && !document.cookie.includes("arcon_demo="));
     } catch {
       setShow(true);

@@ -45,7 +45,7 @@ export function stamp(ctx: CanvasRenderingContext2D, w: number, h: number) {
   ctx.fillText("Made with Arcon", x, h - pad - u * 0.75);
   ctx.font = `${Math.round(u * 0.62)}px ${sans()}`;
   ctx.fillStyle = "rgba(14,26,43,0.6)";
-  ctx.fillText(`${TAGLINE} · AI architect, powered by Qloo`, x, h - pad + u * 0.05);
+  ctx.fillText(`${TAGLINE} · AI architect`, x, h - pad + u * 0.05);
   ctx.restore();
 }
 

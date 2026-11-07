@@ -115,7 +115,7 @@ export function ExportStep({ p, tier, onWalkthrough }: { p: Project; tier: Tier 
         {brief?.summary && <p className="mt-2 max-w-3xl text-ink-soft">{brief.summary}</p>}
         {words.length > 0 && (
           <div className="mt-3 flex flex-wrap items-center gap-1.5">
-            <span className="text-xs text-ink-soft">Your taste, read through Qloo:</span>
+            <span className="text-xs text-ink-soft">Your taste, in words:</span>
             {words.map((w) => (
               <span key={w} className="rounded-full bg-paper px-3 py-0.5 text-sm capitalize">
                 {w}
@@ -264,7 +264,7 @@ export function ExportStep({ p, tier, onWalkthrough }: { p: Project; tier: Tier 
         <div className="print-footer">
           <Mark size={18} />
           <span className="font-serif text-base">{studio ? `Designed by ${studio.name} · Made with Arcon` : "Made with Arcon"}</span>
-          <span>· {TAGLINE} · AI architect, powered by Qloo</span>
+          <span>· {TAGLINE} · AI architect</span>
         </div>
         <section className="print-page">
           {studio?.logo_url && <img src={studio.logo_url} alt="" className="mb-3 h-14 w-14 object-contain" />}
@@ -274,7 +274,7 @@ export function ExportStep({ p, tier, onWalkthrough }: { p: Project; tier: Tier 
             {[p.site.location, brief?.name && `${brief.name} style`, area(cost.area, units), new Date().toLocaleDateString()].filter(Boolean).join(" · ")}
           </p>
           {brief?.summary && <p className="mt-4 max-w-2xl">{brief.summary}</p>}
-          {words.length > 0 && <p className="mt-2 text-sm">Taste words, read through Qloo: {words.join(", ")}</p>}
+          {words.length > 0 && <p className="mt-2 text-sm">Taste words: {words.join(", ")}</p>}
           {shots[0] && <img src={shots[0]} alt="" className="mt-6 w-full" />}
         </section>
         {shots.length > 1 && (

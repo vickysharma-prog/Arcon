@@ -15,7 +15,7 @@ type Cap = { kind: Kind; title: string; body: string; screen: () => ReactNode };
 type Who = "architects" | "builders";
 
 const ARCHITECTS: Cap[] = [
-  { kind: "AI", title: "Your client's taste, read before you meet", body: "Send a link: the client answers at home in English, Hindi or Hinglish, and Qloo reads their style from the films, places and brands they love.", screen: () => <Taste /> },
+  { kind: "AI", title: "Your client's taste, read before you meet", body: "Send a link: the client answers at home in English, Hindi or Hinglish, and Arcon reads their style from the films, places and brands they love.", screen: () => <Taste /> },
   { kind: "AI", title: "Three plans on day one", body: "The layout engine fits their rooms to the plot three ways, each saying what it does best and what it gives up. A 3D walkthrough by day and night comes with them.", screen: () => <Plans /> },
   { kind: "AI", title: "Changes by chat, priced at once", body: "Type \"make the kitchen bigger\". The plan, the budget and the drawings follow in seconds; the rest of the plan gives way, never past the plot.", screen: () => <Chat /> },
   { kind: "Manage", title: "Approvals and change requests on record", body: "Send for review; the client approves a version, which locks it. Any later change goes to them with what it does to the cost.", screen: () => <Approve /> },
@@ -160,7 +160,7 @@ function Taste() {
           </motion.span>
         ))}
       </div>
-      <motion.p {...appear(3)} className="mt-6 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Qloo reads</motion.p>
+      <motion.p {...appear(3)} className="mt-6 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Arcon reads</motion.p>
       <div className="mt-2 flex flex-wrap gap-1.5">
         {words.map((w, i) => (
           <motion.span key={w} {...appear(4 + i * 0.5)} className="rounded-full bg-accent/10 px-2.5 py-0.5 font-mono text-xs text-accent">

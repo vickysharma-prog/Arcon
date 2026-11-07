@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { supabaseAdmin } from "../supabase/admin.ts";
 
-// Hackathon key limits: 5 requests per second, 10,000 per month. Every response is cached in Supabase,
+// Key limits: 5 requests per second, 10,000 per month. Every response is cached in Supabase,
 // so local development and the live app share one cache and a repeat question never spends quota.
 
 const BASE = process.env.QLOO_BASE_URL ?? "https://hackathon.api.qloo.com";

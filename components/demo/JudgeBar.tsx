@@ -8,7 +8,7 @@ import { DEMO_ROLES, PEOPLE, type DemoRole } from "@/lib/demo/story";
 import { CHAPTERS, TOUR } from "@/lib/demo/tour";
 import { AnimatedMark } from "@/components/AnimatedMark";
 
-// The judges' tour, kept out of the way: a small glass pill at the bottom (which chapter and stop, back and next).
+// The tour, kept out of the way: a small glass pill at the bottom (which chapter and stop, back and next).
 // Pointing at it (or a tap) opens what this stop shows, whose view it is (switch in one click), every stop to jump
 // to, and the way out. Between stops one screen covers the page until the next one is ready, and says whose view
 // comes next. Shown only in a demo session.
@@ -77,7 +77,7 @@ export function JudgeNext() {
   const at = useStop();
   if (!at) return null;
   return (
-    <nav aria-label="Judges' tour" className="flex items-center gap-1 rounded-full border border-accent/40 bg-paper-raised p-1 shadow-[0_10px_30px_-18px_var(--accent)]">
+    <nav aria-label="Tour" className="flex items-center gap-1 rounded-full border border-accent/40 bg-paper-raised p-1 shadow-[0_10px_30px_-18px_var(--accent)]">
       {at.step > 1 && (
         <a href={step(at.step - 1)} aria-label="Back" className="grid h-8 w-8 place-items-center rounded-full text-ink-soft transition hover:bg-paper hover:text-ink">
           ‹
@@ -210,7 +210,7 @@ export function JudgeBar() {
     };
   }, [at, path, veil]);
   useEffect(() => setOpen(false), [path]);
-  // A button a judge presses that would change the demo is refused by the server (proxy.ts); some screens keep quiet
+  // A button a visitor presses that would change the demo is refused by the server (proxy.ts); some screens keep quiet
   // about a failed request, so the bar says it once, for all of them.
   const [refused, setRefused] = useState(false);
   useEffect(() => {
@@ -263,7 +263,7 @@ export function JudgeBar() {
           >
             <div className="flex max-w-xl flex-col items-center text-center">
               <AnimatedMark size={56} />
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-accent">Arcon · Taste intelligence by Qloo</p>
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-accent">Arcon · Spaces designed around who you are</p>
               <motion.div initial={still ? false : { opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.4 }} className="mt-8">
                 <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-soft">{veil.chapter}</p>
                 <p className="mt-2 font-serif text-3xl leading-tight sm:text-4xl">{veil.title}</p>
@@ -314,7 +314,7 @@ export function JudgeBar() {
               exit={still ? undefined : { opacity: 0, y: 6 }}
               className="mb-2 rounded-xl border border-accent/40 bg-paper-raised/95 px-4 py-2.5 text-center text-sm shadow-lg backdrop-blur-xl"
             >
-              The judges&apos; demo is view only, so nothing changes.{" "}
+              The demo is view only, so nothing changes.{" "}
               <a href="/demo?exit=start" className="text-accent underline-offset-2 hover:underline">
                 Try it on your own project
               </a>

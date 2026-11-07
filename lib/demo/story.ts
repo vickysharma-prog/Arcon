@@ -1,6 +1,6 @@
 import type { Answers, TastePick } from "../interview/script.ts";
 
-// The judges' demo: one Los Angeles studio and the people around it, and the interview answers that made each
+// The demo: one Los Angeles studio and the people around it, and the interview answers that made each
 // project. scripts/demo-world.ts builds the world from these through the real app; the interview replays Maya's.
 // Synthetic people only. The taste picks are the quiz's own pictures (their Qloo ids are public entity ids).
 
@@ -17,7 +17,7 @@ export const PEOPLE: Record<DemoRole, { role: "owner" | "architect" | "builder";
 
 const pick = (slot: TastePick["slot"], id: string, name: string): TastePick => ({ slot, id, name });
 
-/** Maya's house in Silver Lake: the story the judges follow, from the interview to the building site. */
+/** Maya's house in Silver Lake: the story the tour follows, from the interview to the building site. */
 export const MAYA: Answers = {
   type: "house",
   build: "new",

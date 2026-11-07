@@ -10,7 +10,7 @@ export const FAQ: { q: string; a: string }[] = [
   },
   {
     q: "How does it know my taste?",
-    a: "You tell Arcon about the films, music, places and brands you love. Qloo's taste graph finds what those have in common, the decor, the ambience, the price level, and Arcon designs from that. Every choice in your design shows the taste signal behind it.",
+    a: "You tell Arcon about the films, music, places and brands you love. Arcon's taste graph finds what those have in common, the decor, the ambience, the price level, and Arcon designs from that. Every choice in your design shows the taste signal behind it.",
   },
   {
     q: "What happens to my data?",

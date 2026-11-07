@@ -18,7 +18,7 @@ export function TasteTrail({ trail }: { trail: Trail }) {
   return (
     <section className="mt-14" aria-labelledby="trail">
       <h2 id="trail" className="font-serif text-3xl">Where your style came from</h2>
-      <p className="mt-1 text-sm text-ink-soft">What each thing you love gave this design, read through Qloo&apos;s taste graph.</p>
+      <p className="mt-1 text-sm text-ink-soft">What each thing you love gave this design, read through its taste graph.</p>
 
       <ul className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {trail.loves.map((l, i) => (

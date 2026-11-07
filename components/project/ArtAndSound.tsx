@@ -31,7 +31,7 @@ export function ArtAndSound({ id }: { id: string }) {
   if (data === null || (data && !data.art.length && !data.music.length)) return null;
   return (
     <section className="mt-12" aria-labelledby="art-sound" aria-busy={!data}>
-      <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Read by Qloo</p>
+      <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent">Read from your taste</p>
       <h2 id="art-sound" className="mt-1 font-serif text-3xl">
         <Decode text="Art and sound" />
       </h2>

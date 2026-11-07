@@ -171,7 +171,7 @@ export function CheckPlan({ id, imported, units, onDone }: Props) {
 
           <section>
             <h2 className="font-serif text-2xl">What do you love?</h2>
-            <p className="mt-1 text-sm text-ink-soft">We style your plan from these, through Qloo&apos;s taste data.</p>
+            <p className="mt-1 text-sm text-ink-soft">We style your plan from these, through your taste.</p>
             {SLOTS.map((slot) => (
               <TasteQuestion key={slot.id} slot={slot} onPick={(p) => setPicks((all) => ({ ...all, [slot.id]: p ?? undefined }))} />
             ))}

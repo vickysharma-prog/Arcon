@@ -32,7 +32,7 @@ export async function GET(request: Request) {
   if (!picks) return Response.json({ error: "That link isn't a quiz result." }, { status: 400 });
   const found = await Promise.all(ROUNDS.map(async (r) => ({ slot: r.slot as Slot, e: await find(picks[r.slot], r.types) })));
   const known = found.flatMap((f) => (f.e ? [f.e] : []));
-  if (known.length < ROUNDS.length) return Response.json({ error: "Qloo couldn't find one of those just now. Try again." }, { status: 502 });
+  if (known.length < ROUNDS.length) return Response.json({ error: "We couldn't find one of those just now. Try again." }, { status: 502 });
   const signals = known.map((e) => ({ entityId: e.entity_id, name: e.name, layer: layerOf(e) }));
   const taste = await profileFor(signals, new Map(known.map((e) => [e.entity_id, e])));
   const style = styleOf(taste, "");

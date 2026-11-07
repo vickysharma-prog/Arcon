@@ -6,26 +6,26 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { tick } from "@/components/fx/sfx";
 
-// A short guide, shown once, at two moments only: on the interview (what's about to happen, and for judges the tour
+// A short guide, shown once, at two moments only: on the interview (what's about to happen, and in the tour, the tour
 // pill) and the first time a design opens (where the controls are). Each tip lights up the control it's about.
 // Seen guides are remembered (see `store`), so they never come back within the same visit.
 
 type Tip = { at?: string; title: string; body: string };
 const SEEN = "arcon-guide-";
 // The tour's guides are remembered for this visit to the tour only (leaving it clears them, see JudgeBar), so every
-// judge who starts the tour gets them; a person's own guides are remembered in this browser for good.
+// visitor who starts the tour gets them; a person's own guides are remembered in this browser for good.
 const store = (id: string) => (id.startsWith("tour-") ? sessionStorage : localStorage);
 
 const GUIDES: Record<string, Tip[]> = {
   "tour-start": [
-    { at: "#judge-pill", title: "Welcome, judges", body: "A three-minute tour of Arcon: 12 stops in three chapters. Maya's interview plays by itself, then the tour moves on." },
+    { at: "#judge-pill", title: "Welcome to Arcon", body: "A three-minute tour of Arcon: 12 stops in three chapters. Maya's interview plays by itself, then the tour moves on." },
     { at: "#judge-pill", title: "This pill is your remote", body: "Point at it, or tap it on a phone, to see what each stop shows, whose view it is, and every stop to jump to. Next moves on, and so do the arrow keys." },
   ],
   "tour-app": [
     { at: 'button[aria-label="Open the sidebar"], button[aria-label="Open the menu"]', title: "The sidebar is folded", body: "So the design gets the whole screen. Open it here (Ctrl+B on a computer) for every tool and every project." },
     { at: 'nav[aria-label="Progress"], nav[aria-label="Project"]', title: "Every part of the project", body: "The design, the thread, the site, the budget and the files, one click each. The tour stops at the ones that matter most." },
     { at: 'button[aria-label="Search and jump"]', title: "Search everything", body: "Ctrl+K jumps to any project, plan or message." },
-    { at: 'nav[aria-label="Judges\' tour"]', title: "Back and Next", body: "Beside every page's title, and in the pill at the bottom." },
+    { at: 'nav[aria-label="Tour"]', title: "Back and Next", body: "Beside every page's title, and in the pill at the bottom." },
     { at: "#judge-pill", title: "See it through other eyes", body: "Point at the pill, or tap it, to switch between Maya, Lena the architect, Mike the builder and Sam the café owner." },
   ],
   start: [{ title: "Tell Arcon about your space", body: "Type or talk, in any language. About three minutes of questions, then three pictures for your taste, and your design follows." }],
@@ -36,7 +36,7 @@ const GUIDES: Record<string, Tip[]> = {
 
 /** Which guide this page gets, if any. */
 function guideFor(path: string, search: string, demo: boolean): string | null {
-  if (demo) return path === "/start" ? "tour-start" : /^\/(project|home)/.test(path) ? "tour-app" : null;
+  if (demo) return path === "/start" && search.includes("demo=1") ? "tour-start" : /^\/(project|home)/.test(path) ? "tour-app" : null;
   if (path === "/start" && !search.includes("demo=1")) return "start";
   return /^\/project\/[0-9a-f-]{36}$/.test(path) ? "project" : null;
 }

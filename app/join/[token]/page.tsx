@@ -60,7 +60,7 @@ async function Invite({ params }: { params: PageProps<"/join/[token]">["params"]
           </Link>
         </div>
       )}
-      <p className="mt-10 text-xs text-ink-soft">Arcon designs spaces around the taste of the people who use them, powered by Qloo.</p>
+      <p className="mt-10 text-xs text-ink-soft">Arcon designs spaces around the taste of the people who use them.</p>
     </div>
   );
 }

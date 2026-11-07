@@ -100,7 +100,7 @@ await wait(0.8);
 await beat("opening", async () => {
   await page.mouse.click(640, 360);
   await wait(2.4);
-  await caption("", "Your AI architect, powered by Qloo's taste AI");
+  await caption("", "Your AI architect, built around your taste");
   await wait(1);
 });
 

@@ -78,7 +78,7 @@ export function tabsFor(role: ProjectRole, unlocked: boolean): Tab[] {
 export const lockedSteps = (unlocked: boolean): string[] => (unlocked ? [] : ["budget", "shop", "workspace", "drawings"]);
 
 /**
- * Every project opens in full for everyone while the judges look (Vicky, 24 Oct): nothing waits on a payment.
+ * Every project opens in full for everyone for now (Vicky, 24 Oct): nothing waits on a payment.
  * ponytail: one switch, set it to false once checkout is live. It opens unlockedFor (lib/project/unlock.ts, which
  * the API's `unlocked` and the paid routes in lib/auth/request.ts read) and the sidebar's Make changes (lib/shell/data.ts).
  */

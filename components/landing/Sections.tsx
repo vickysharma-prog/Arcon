@@ -27,7 +27,7 @@ function Heading({ eyebrow, title, sub }: { eyebrow: string; title: ReactNode; s
 
 const STEPS = [
   { n: "01", title: "Tell Arcon about it", body: "The space, who uses it, how it's used and your budget. Tap, type or just talk." },
-  { n: "02", title: "Find your style", body: "Three quick picks: a place, a brand, a film or music. Qloo reads your taste and names your style." },
+  { n: "02", title: "Find your style", body: "Three quick picks: a place, a brand, a film or music. Arcon reads your taste and names your style." },
   { n: "03", title: "Choose a plan", body: "Three floor plans for your plot, each clear about what it does best and what it gives up." },
   { n: "04", title: "Walk through it", body: "Step inside in 3D, by day or by night, with the outside designed from your taste too." },
   { n: "05", title: "Build it", body: "Budget, drawings, a shopping list, your team and the building site, all in one place." },
@@ -144,7 +144,7 @@ export function TasteFlow() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-8">
         <Heading
           eyebrow="Taste becomes space"
-          title="Your films, cafés and brands, read by Qloo's taste AI."
+          title="Your films, cafés and brands, read by Arcon's taste AI."
           sub="Most design tools ask you to describe a style. Arcon finds it in the things you already love, then shows you why every choice was made."
         />
         <Reveal className="mt-14 hidden md:block">
@@ -183,7 +183,7 @@ export function TasteFlow() {
               </button>
             ))}
           </Column>
-          <Column title="Qloo reads">
+          <Column title="Arcon reads">
             <div className="relative flex flex-wrap justify-center gap-2.5 rounded-3xl border border-accent/30 bg-paper/70 px-5 py-8 shadow-[0_0_80px_-30px_var(--accent)]">
               {/* the taste engine at the centre, pulsing */}
               <span aria-hidden className="pointer-events-none absolute inset-0 rounded-3xl bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--accent)_14%,transparent),transparent_70%)] animate-pulse motion-reduce:animate-none" />
@@ -237,7 +237,7 @@ export function Features() {
         <Feature delay={0} title="Talk in your language" body="Speak or type in English, हिंदी or Hinglish. Tap answers when you'd rather not type.">
           <Bars />
         </Feature>
-        <Feature delay={0.08} title="Your style, read by Qloo" body="Three picks become your style, and every material, colour and piece says which of your loves it came from.">
+        <Feature delay={0.08} title="Your style, read from your taste" body="Three picks become your style, and every material, colour and piece says which of your loves it came from.">
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-wider text-ink-soft">
             <span className="rounded border border-line px-1.5 py-0.5">film</span>→<span className="rounded border border-accent px-1.5 py-0.5 text-accent">low light</span>→
             <span className="rounded border border-leaf px-1.5 py-0.5 text-leaf">lamps</span>
@@ -322,7 +322,7 @@ function Cube() {
 
 const AUDIENCE = [
   { title: "Homeowners", body: "Planning a new build or a big renovation: see it, change it and price it before anyone builds it, then follow the build." },
-  { title: "Cafés, hotels, shops and offices", body: "Arcon asks how you run the place, reads your neighbourhood through Qloo and plans for the crowd you want." },
+  { title: "Cafés, hotels, shops and offices", body: "Arcon asks how you run the place, reads your neighbourhood and plans for the crowd you want." },
   { title: "Architects and designers", body: "Studio tools: new clients in person or by link, three options on day one, your branding on every drawing, fees by milestone." },
   { title: "Builders", body: "Run the site in Arcon: phases, crew, materials and photo updates your client can follow, while your costs stay yours." },
 ];
@@ -437,7 +437,7 @@ export function Faq() {
 }
 
 const PLANS = [
-  { name: "Free", price: "$0", per: "", for: "Anyone, to try it", cta: "Start free", href: "/start", features: ["Your style, read by Qloo", "Three floor plans", "The 3D from outside", "The style quiz"] },
+  { name: "Free", price: "$0", per: "", for: "Anyone, to try it", cta: "Start free", href: "/start", features: ["Your style, read from your taste", "Three floor plans", "The 3D from outside", "The style quiz"] },
   { name: "Project", price: "$149", per: "one time", alt: "$299 for a café, shop, office or hotel", for: "Homeowners and business owners", cta: "Design my space", href: "/start", featured: true, features: ["Walk inside, by day and night", "Budget, timeline and shopping list", "Make changes by chat", "Drawings pack, PDF and DXF", "Your architect and builder on the project", "Follow the building site"] },
   { name: "Studio", price: "$99", per: "/month", alt: "or $990 a year, two months free", for: "Architects and interior designers", cta: "Start 14-day trial", href: "/login?mode=signup", features: ["Every client project unlocked", "New clients in person or by link", "Your branding on exports", "Fees by milestone", "Clients find you by taste match"] },
   { name: "Build", price: "$299", per: "/month", alt: "or $2,990 a year", for: "Builders and contractors", cta: "Start 14-day trial", href: "/login?mode=signup", features: ["Site tracking: phases, crew, materials", "Photo updates for clients", "Your costs stay yours", "Design-and-build projects"] },
@@ -526,12 +526,12 @@ export function Footer() {
             <Logo size={24} />
           </HomeLink>
           <p className="mt-3 max-w-xs text-sm text-ink-soft">An AI architect that designs any space around the taste of the people who use it.</p>
-          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Taste intelligence by Qloo</p>
+          <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.25em] text-accent">Spaces designed around who you are</p>
         </div>
         <nav aria-label="Arcon" className="grid content-start gap-2 text-sm">
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-soft">Arcon</p>
           <Link href="/start" className="w-fit hover:text-accent">Start designing</Link>
-          <a href="/demo" className="w-fit hover:text-accent">For judges</a>
+          <a href="/demo" className="w-fit hover:text-accent">Take the tour</a>
           <Link href="/resources" className="w-fit hover:text-accent">Resources</Link>
           <Link href="/privacy" className="w-fit hover:text-accent">Privacy</Link>
         </nav>

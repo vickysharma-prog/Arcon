@@ -44,12 +44,12 @@ const SECTIONS: Section[] = [
     body: (
       <>
         <p>
-          Arcon is an AI architect. You talk to it about who you are and what you love; it reads your taste through Qloo&apos;s taste graph and designs your space from it: a floor plan, a 3D walkthrough by day and night, a budget in your currency, a shopping list and a timeline. Then it stays with the project through review, approval and building.
+          Arcon is an AI architect. You talk to it about who you are and what you love; it reads your taste through a taste graph and designs your space from it: a floor plan, a 3D walkthrough by day and night, a budget in your currency, a shopping list and a timeline. Then it stays with the project through review, approval and building.
         </p>
         <Steps
           items={[
             "Tell Arcon about the space: what it is, where, how big, who uses it, your budget.",
-            "Find your style: pick a few places, brands, films or music you love. Qloo reads what they have in common.",
+            "Find your style: pick a few places, brands, films or music you love. Arcon reads what they have in common.",
             "Choose one of three plans, each with what it does best and what it gives up, or upload your own.",
             "Walk through it in 3D, change anything by chat, and see the budget follow.",
             "Share it with your architect, client or builder, approve it, follow the build and move in.",
@@ -169,7 +169,7 @@ const SECTIONS: Section[] = [
         <Sub title="What Arcon's AI does for you">
           <Steps
             items={[
-              "Reads your client before you meet: send a link and they answer at home (typed, tapped or spoken, in English, Hindi or Hinglish), or answer together in your meeting. Qloo reads their style from the films, places and brands they love, and every choice in the design says which love it came from.",
+              "Reads your client before you meet: send a link and they answer at home (typed, tapped or spoken, in English, Hindi or Hinglish), or answer together in your meeting. Arcon reads their style from the films, places and brands they love, and every choice in the design says which love it came from.",
               "Draws three plans on day one: the layout engine fits their rooms to the plot three ways and checks each against building rules. Each option says what it does best and what it gives up. Or upload the plan you already have and Arcon reads it into an editable layout.",
               "Builds the rest of a first presentation: the 3D walkthrough by day and night, the outside from their taste, a style brief with palette and materials, a budget in their currency, a timeline, a green score and a shopping list at their price level.",
               "Takes changes by chat: type \"make the kitchen bigger\" or \"add a study\" and the plan, budget and drawings follow in seconds. A room that needs space takes it from the rooms around it, and the building can grow into the garden, never past the plot.",
@@ -251,12 +251,12 @@ const SECTIONS: Section[] = [
       <>
         <p>
           Every design decision in Arcon can be traced back to something you said you love. The strip under the top of the{" "}
-          <Link href="/?site" className="text-accent hover:underline">home page</Link> shows it live: two loves, and what Qloo reads from them right now.
+          <Link href="/?site" className="text-accent hover:underline">home page</Link> shows it live: two loves, and what Arcon reads from them right now.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {[
             ["The interview", "Arcon asks about the space and about you, one question at a time, in English, Hindi or Hinglish, typed, tapped or spoken."],
-            ["Qloo's taste graph", "The things you name become Qloo entities. Qloo returns what they share: decor, ambience, price level, and brands and places that match."],
+            ["The taste graph", "The things you name are matched in a taste graph of places, brands, films and music, which returns what they share: decor, ambience, price level, and brands and places that match."],
             ["The brief", "A style name and its words, a palette, materials and a moodboard, each linked to the taste behind it."],
             ["The plans", "A layout engine fits your rooms to the site three ways and checks each one against building rules."],
             ["3D and moods", "Each room gets a mood and light from the ambience of the places you love, by day and by night."],
@@ -293,7 +293,7 @@ const SECTIONS: Section[] = [
     body: (
       <>
         <p>
-          Arcon is a Next.js app (App Router, React, Tailwind) with three.js for the 3D, Supabase for accounts, data and files, Qloo&apos;s Insights API for taste, and an AI model for the brief, the room list and changes by chat. The interview is a script that asks one question at a time and never waits on a model; an interviewer agent built with eve (agents/interviewer, with its own tools, instructions and evals) is mounted at /eve/interviewer.
+          Arcon is a Next.js app (App Router, React, Tailwind) with three.js for the 3D, Supabase for accounts, data and files, a taste graph API for taste, and an AI model for the brief, the room list and changes by chat. The interview is a script that asks one question at a time and never waits on a model; an interviewer agent built with eve (agents/interviewer, with its own tools, instructions and evals) is mounted at /eve/interviewer.
         </p>
         <Code>{`app/          pages and API routes
 components/   screens; components/fx holds the shared sounds and motion
@@ -303,7 +303,7 @@ db/migrations the database tables, applied in order
 scripts/      tools for checking against the real services`}</Code>
         <p className="mt-6 font-medium">Run it</p>
         <Code>{`npm install
-cp .env.example .env.local   # Supabase, Qloo and model keys
+cp .env.example .env.local   # Supabase, taste and model keys
 npm run migrate               # creates the tables
 npm run dev                   # http://localhost:3000
 npm test                      # unit tests`}</Code>
@@ -313,8 +313,8 @@ npm test                      # unit tests`}</Code>
           <table className="w-full text-left text-sm">
             <tbody className="divide-y divide-line">
               {[
-                ["POST /api/interview", "every answer of the interview: checked, the taste picks confirmed with Qloo, the project created"],
-                ["POST /api/taste", "names you love → Qloo entities and taste tags"],
+                ["POST /api/interview", "every answer of the interview: checked, the taste picks confirmed, the project created"],
+                ["POST /api/taste", "names you love → taste entities and tags"],
                 ["GET /api/projects/:id", "a project and your role on it"],
                 ["POST /api/projects/:id/design", "brief, three plans and their trade-offs"],
                 ["POST /api/projects/:id/choose", "pick a plan"],
@@ -335,7 +335,7 @@ npm test                      # unit tests`}</Code>
                 ["DELETE /api/projects/:id", "delete a project (owner only)"],
                 ["DELETE /api/account", "delete your account"],
                 ["GET /api/palette", "your projects, for Ctrl+K"],
-                ["GET /api/strip", "the landing page's live Qloo reads"],
+                ["GET /api/strip", "the landing page's live taste reads"],
                 ["GET /api/quiz", "the style quiz: three picks → your style"],
                 ["POST /api/email-check", "can this address receive mail?"],
               ].map(([r, d]) => (
@@ -356,7 +356,7 @@ npm test                      # unit tests`}</Code>
     title: "Data and privacy",
     body: (
       <p>
-        What Arcon stores, why, and how to delete it is in the <Link href="/privacy" className="text-accent hover:underline">privacy page</Link>. Taste data from Qloo is used to design your project and cached only to keep it fast.
+        What Arcon stores, why, and how to delete it is in the <Link href="/privacy" className="text-accent hover:underline">privacy page</Link>. Taste data from our taste-data provider is used to design your project and cached only to keep it fast.
       </p>
     ),
   },

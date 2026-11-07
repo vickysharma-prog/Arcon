@@ -69,7 +69,7 @@ check("drawings pack in the live bundle", drawings);
 check("exterior from taste in the live bundle", bundle.includes("a pitched gable roof") && bundle.includes("a planted garden"));
 check("day and night in the live bundle", bundle.includes("#0d1424"));
 
-// The taste quiz (16 Oct): public, a fixed list, a card from Qloo with no sign-in
+// The taste quiz (16 Oct): public, a fixed list, a taste card with no sign-in
 check("quiz page", (await get("/quiz")).status === 200);
 const opts = await get("/api/quiz");
 check("quiz pictures", (opts.body.rounds ?? []).every((r: { options: unknown[] }) => r.options.length >= 6), (opts.body.rounds ?? []).map((r: { options: unknown[] }) => r.options.length).join("/"));
@@ -77,7 +77,7 @@ const qcard = await get("/api/quiz?p=aman-tokyo.muji.spirited-away");
 check("quiz card", qcard.status === 200 && !!qcard.body.style && (qcard.body.words ?? []).length > 0, qcard.body.style);
 check("quiz refuses picks off the list", (await get("/api/quiz?p=aman-tokyo.supreme.amelie")).status === 400);
 // The interview flow (16 Oct): questions, then "Now let's find your style" with pictures, the style, then the design
-check("pictures carry Qloo ids for the interview", (opts.body.rounds ?? []).every((r: { options: { id?: string }[] }) => r.options.every((o) => !!o.id)));
+check("pictures carry taste ids for the interview", (opts.body.rounds ?? []).every((r: { options: { id?: string }[] }) => r.options.every((o) => !!o.id)));
 const start = await get("/start");
 const startJs = (await Promise.all([...String(start.body).matchAll(/src="(\/_next\/static\/[^"]+\.js)"/g)].map(async (m) => (await fetch(BASE + m[1])).text()))).join(" ");
 check("interview: find your style, then design my space", start.status === 200 && startJs.includes("Now design my space") && startJs.includes("find your style"));
@@ -85,7 +85,7 @@ check("interview: find your style, then design my space", start.status === 200 &
 // Room moods and art and sound (16 Oct)
 const art = await get(`/api/projects/${CAFE}/art`, "owner");
 check("art and sound", art.status === 200 && (art.body.art ?? []).length > 0 && (art.body.music ?? []).length > 0, `${(art.body.art ?? []).length} galleries, ${(art.body.music ?? []).length} artists`);
-check("room moods in the live bundle", bundle.includes("Mood, read by Qloo"));
+check("room moods in the live bundle", bundle.includes("Mood, read from your taste"));
 
 // The app (16 Oct): installable, the logo in the tab, and someone signed in opens their projects, not the landing page
 const landing = String((await get("/")).body);
@@ -108,9 +108,9 @@ check("a stranger can't delete a project", (await fetch(`${BASE}/api/projects/${
 check("a client can't delete the owner's project", (await fetch(`${BASE}/api/projects/${BUILDING}`, { method: "DELETE", headers: { cookie: await cookieFor("client") } })).status === 404);
 check("deleting an account needs DELETE typed", (await fetch(`${BASE}/api/account`, { method: "DELETE", headers: { cookie: await cookieFor("owner"), "content-type": "application/json" }, body: "{}" })).status === 400);
 
-// The landing page's live Qloo strip (16 Oct)
+// The landing page's live taste strip (16 Oct)
 const strip = await get("/api/strip");
-check("live Qloo strip", strip.status === 200 && (strip.body.reads ?? []).length === 3 && strip.body.reads.every((r: { words: unknown[] }) => r.words.length > 0), (strip.body.reads ?? []).map((r: { style: string }) => r.style).join(", "));
+check("live taste strip", strip.status === 200 && (strip.body.reads ?? []).length === 3 && strip.body.reads.every((r: { words: unknown[] }) => r.words.length > 0), (strip.body.reads ?? []).map((r: { style: string }) => r.style).join(", "));
 
 // The role homes and the command box (16 Oct)
 for (const [who, title] of [["owner", "My spaces"], ["architect", "Studio"], ["builder", "Sites"]]) {

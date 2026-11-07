@@ -5,7 +5,7 @@ import { DEMO_ROLES, TITLES, type DemoRole } from "@/lib/demo/story";
 import { pathOf, stopAt, switchTo, TOUR, type ProjectKey } from "@/lib/demo/tour";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
-// The judges' way in: /demo?step=N signs in as the person whose view that stop is and opens it; ?as=lena&from=…
+// The tour's way in: /demo?step=N signs in as the person whose view that stop is and opens it; ?as=lena&from=…
 // switches person on the same page; ?exit leaves (to /start with exit=start). Only the four demo accounts can be
 // signed in here, and they are view-only (proxy.ts).
 export async function GET(request: NextRequest) {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const res = go(start ? "/start" : "/?site");
     res.cookies.delete(USER_COOKIE);
     res.cookies.delete(DEMO_COOKIE);
-    // A judge trying it for real: what they design here opens in full, with no sign-in in the way.
+    // A visitor trying it for real: what they design here opens in full, with no sign-in in the way.
     if (start) res.cookies.set(JUDGE_COOKIE, "1", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 * 14 });
     return res;
   }
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
   const res = go(to);
   const secure = process.env.NODE_ENV === "production";
   res.cookies.set(USER_COOKIE, await signUser(DEMO_IDS[who], process.env.ARCON_SESSION_SECRET ?? ""), { httpOnly: true, secure, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 });
-  // read by the judge bar: which stop, and whose view
+  // read by the tour bar: which stop, and whose view
   res.cookies.set(DEMO_COOKIE, `${step}.${who}`, { secure, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 });
   return res;
 }
