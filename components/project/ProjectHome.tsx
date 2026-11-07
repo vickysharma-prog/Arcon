@@ -1,6 +1,6 @@
 "use client";
 
-import { JudgeNext } from "@/components/demo/JudgeBar";
+import { TourNext } from "@/components/demo/TourBar";
 import { DeleteProject } from "./DeleteProject";
 import { useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
@@ -84,7 +84,7 @@ export function ProjectHome({
             <h1 className="font-serif text-4xl sm:text-5xl">{p.title ?? "Your project"}</h1>
           </div>
           <div className="flex flex-wrap items-center gap-3">
-            <JudgeNext />
+            <TourNext />
             {/* The studio behind the design, shown to its clients (the pros themselves don't need their own logo back). */}
             {p.studio && (role === "client" || role === "viewer" || (role === "owner" && p.mode !== "pro")) && (
               <span className="flex items-center gap-2 rounded-full border border-line bg-paper-raised py-1 pl-1 pr-3 text-xs">

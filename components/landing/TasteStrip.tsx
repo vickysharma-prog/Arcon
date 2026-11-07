@@ -26,7 +26,7 @@ const EXAMPLE: Read = {
   brands: [],
 };
 
-export function QlooStrip() {
+export function TasteStrip() {
   const still = useReducedMotion();
   const [reads, setReads] = useState<Read[] | null>(null);
   const [live, setLive] = useState(false);

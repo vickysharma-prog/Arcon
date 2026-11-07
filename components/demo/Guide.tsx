@@ -12,7 +12,7 @@ import { tick } from "@/components/fx/sfx";
 
 type Tip = { at?: string; title: string; body: string };
 const SEEN = "arcon-guide-";
-// The tour's guides are remembered for this visit to the tour only (leaving it clears them, see JudgeBar), so every
+// The tour's guides are remembered for this visit to the tour only (leaving it clears them, see TourBar), so every
 // visitor who starts the tour gets them; a person's own guides are remembered in this browser for good.
 const store = (id: string) => (id.startsWith("tour-") ? sessionStorage : localStorage);
 

@@ -26,7 +26,7 @@ import { statusLine, type Wait } from "@/lib/home/waiting";
 import { projectName, SPACE } from "@/lib/home/names";
 import { PlanSketch } from "@/components/home/PlanSketch";
 import { OpeningDay, PlanOr3D } from "@/components/home/Focus";
-import { JudgeNext } from "@/components/demo/JudgeBar";
+import { TourNext } from "@/components/demo/TourBar";
 
 export const metadata: Metadata = { title: "Your projects · Arcon" };
 
@@ -128,7 +128,7 @@ async function HomePageBody({ searchParams }: { searchParams: Promise<Record<str
           <h1 className="font-serif text-5xl sm:text-6xl">
             <Decode key={title} text={title} />
           </h1>
-          <JudgeNext />
+          <TourNext />
         </div>
         <p className="mt-3 font-mono text-xs text-ink-soft">
           <span className="text-accent">&gt; </span>

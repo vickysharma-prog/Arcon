@@ -73,7 +73,7 @@ export function tourGo(href: string) {
 }
 
 /** Back and next in the page's own title row, beside the title, where people look for the way on. */
-export function JudgeNext() {
+export function TourNext() {
   const at = useStop();
   if (!at) return null;
   return (
@@ -96,7 +96,7 @@ export function JudgeNext() {
 /** True once the page under the veil has something to show: no whole-page loading screen left, and a heading. */
 const ready = () => !document.querySelector("[data-page-loading]") && !!document.querySelector("main h1, h1");
 
-export function JudgeBar() {
+export function TourBar() {
   const path = usePathname();
   const still = useReducedMotion();
   const at = useStop();

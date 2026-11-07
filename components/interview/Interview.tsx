@@ -16,7 +16,7 @@ import { sizeFrom } from "@/lib/interview/logic";
 import type { Candidate } from "@/lib/interview/logic";
 import { useListen, useMicLevel, useSpeak } from "./useVoice";
 import { MAYA } from "@/lib/demo/story";
-import { tourGo } from "@/components/demo/JudgeBar";
+import { tourGo } from "@/components/demo/TourBar";
 import { VoiceMode, type VoiceState } from "./VoiceMode";
 
 const LANG_KEY = "arcon-lang";
