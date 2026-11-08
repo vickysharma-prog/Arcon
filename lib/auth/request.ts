@@ -22,8 +22,12 @@ export async function whoOf(cookieHeader: string | null) {
 // can't tell a missing project from someone else's, and a viewer can't tell an edit route exists.
 // `paid`: the route is part of what unlocking opens (budget, shopping, changes, invites), so a locked project is refused.
 export async function accessTo(id: string, cookieHeader: string | null, action: Action = "view", paid = false): Promise<{ project: Project; role: ProjectRole } | null> {
+  return accessFor(id, await whoOf(cookieHeader), action, paid);
+}
+
+/** The same check for a known person: a cookie's, or the person an Arcon Studio connection acts for. */
+export async function accessFor(id: string, who: { userId?: string | null; guestId?: string | null }, action: Action = "view", paid = false): Promise<{ project: Project; role: ProjectRole } | null> {
   if (!UUID.test(id)) return null;
-  const who = await whoOf(cookieHeader);
   if (!who.userId && !who.guestId) return null;
   try {
     const project = await getProject(id);

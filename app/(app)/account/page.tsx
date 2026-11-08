@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/SiteHeader";
 import { ProfileForm } from "@/components/account/ProfileForm";
 import { DeleteAccount } from "@/components/account/DeleteAccount";
+import { StudioConnections } from "@/components/account/StudioConnections";
 import { currentUser } from "@/lib/auth/server";
 import { PageLoading } from "@/components/fx/PageLoading";
 import { emailOf, getProfile } from "@/lib/account/profile";
@@ -31,6 +32,7 @@ async function AccountPageBody() {
           </Link>
         </p>
       </section>
+      <StudioConnections />
       <DeleteAccount />
     </main>
   );
