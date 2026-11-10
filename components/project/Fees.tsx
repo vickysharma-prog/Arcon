@@ -63,6 +63,13 @@ export function Fees({ projectId, location }: { projectId: string; location?: st
   useEffect(() => {
     void load();
   }, [load]);
+  // a link to #fees (the tour) lands on the fees once they've loaded
+  const loaded = !!data;
+  useEffect(() => {
+    if (!loaded || window.location.hash !== "#fees") return;
+    const t = setTimeout(() => document.getElementById("fees")?.scrollIntoView({ behavior: "smooth", block: "start" }), 400);
+    return () => clearTimeout(t);
+  }, [loaded]);
 
   if (!data || !data.side || (data.side === "payer" && data.milestones.length === 0)) return null;
   const sum = data.milestones.reduce((s, m) => s + m.amount, 0);
@@ -114,7 +121,7 @@ export function Fees({ projectId, location }: { projectId: string; location?: st
   }
 
   return (
-    <section className="mt-4 rounded-2xl border border-line bg-paper-raised p-5">
+    <section id="fees" className="mt-4 scroll-mt-36 rounded-2xl border border-line bg-paper-raised p-5">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <p className="font-serif text-2xl">Fees</p>
         {sum > 0 && (

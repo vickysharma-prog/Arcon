@@ -16,7 +16,7 @@ Live at **[arcon-ten.vercel.app](https://arcon-ten.vercel.app)**.
 
 **Open [arcon-ten.vercel.app/demo](https://arcon-ten.vercel.app/demo)** for the guided tour, or press "Take the tour" on [arcon-ten.vercel.app](https://arcon-ten.vercel.app). No sign-in, nothing to install. On a phone, add it to your home screen and it runs as an app.
 
-- **A guided tour, 12 stops in three chapters** (about three minutes): Maya's interview plays itself and Arcon reads her three picks; her style, three plans, the 3D walk, the budget, the shopping list and the drawings; then her architect's studio, her builder's site and another client's last week before moving in; then a Brooklyn café designed against its own street, by night. Switch between the homeowner, architect, builder and café owner at any stop.
+- **A guided tour, 13 stops in three chapters** (about three minutes): Maya's interview plays itself and Arcon reads her three picks; her style, three plans, the 3D walk, the budget, the shopping list and the drawings; then her architect's studio, her fees paid with PayPal, her builder's site and another client's last week before moving in; then a Brooklyn café designed against its own street, by night. Switch between the homeowner, architect, builder and café owner at any stop.
 - **Then "Try it yourself":** a fresh interview in any language, your own three picks read for taste, and a design of your own. The style, the three plans and the 3D from outside are free; unlocking the rest is one PayPal payment (sandbox, see below).
 - The tour's world is seeded through the real app, so it is the same for every visitor and never waits on a model.
 
