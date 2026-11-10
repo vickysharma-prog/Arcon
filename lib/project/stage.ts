@@ -77,13 +77,6 @@ export function tabsFor(role: ProjectRole, unlocked: boolean): Tab[] {
  *  making changes and the exports. Style, the three plans and the 3D from outside stay free. */
 export const lockedSteps = (unlocked: boolean): string[] => (unlocked ? [] : ["budget", "shop", "workspace", "drawings"]);
 
-/**
- * Every project opens in full for everyone for now (Vicky, 24 Oct): nothing waits on a payment.
- * ponytail: one switch, set it to false once checkout is live. It opens unlockedFor (lib/project/unlock.ts, which
- * the API's `unlocked` and the paid routes in lib/auth/request.ts read) and the sidebar's Make changes (lib/shell/data.ts).
- */
-export const OPEN_FOR_JUDGING = true;
-
 /** The one-time price to unlock a project: businesses get more (neighbourhood read, more rooms), so pay more. */
 export const unlockPrice = (spaceType: string | null | undefined) => (["cafe", "office", "shop", "hotel"].includes(spaceType ?? "") ? 299 : 149);
 

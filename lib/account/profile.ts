@@ -38,7 +38,7 @@ export const ProfileInput = z
   }));
 export type ProfileInput = z.infer<typeof ProfileInput>;
 
-export type Profile = ProfileInput & { user_id: string; logo_url: string | null; plan: Plan; plan_until: string | null; trial_until: string | null; demo: boolean };
+export type Profile = ProfileInput & { user_id: string; logo_url: string | null; plan: Plan; plan_until: string | null; trial_until: string | null; demo: boolean; paypal_email?: string | null; paypal_subscription?: string | null };
 
 export async function getProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await supabaseAdmin().from("profiles").select().eq("user_id", userId).maybeSingle();

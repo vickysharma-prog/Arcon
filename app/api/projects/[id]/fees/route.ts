@@ -3,6 +3,7 @@ import { accessTo, userOf } from "@/lib/auth/request";
 import { money, sideOf } from "@/lib/project/fees";
 import { nameOf, postEvent } from "@/lib/project/thread";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { paypalTakes } from "@/lib/paypal/order";
 
 const cookie = (r: Request) => r.headers.get("cookie");
 
@@ -12,15 +13,17 @@ export async function GET(request: Request, ctx: RouteContext<"/api/projects/[id
   if (!a || a.role === "viewer") return Response.json({ error: "not found" }, { status: 404 });
   const side = sideOf(a.role, a.project.mode);
   const me = await userOf(cookie(request));
-  let q = supabaseAdmin().from("milestones").select("id, label, amount, currency, status, billed_at, claimed_at, received_at, created_by, phase").eq("project_id", a.project.id).order("position");
+  let q = supabaseAdmin().from("milestones").select("id, label, amount, currency, status, billed_at, claimed_at, received_at, created_by, phase, payment_id").eq("project_id", a.project.id).order("position");
   // a pro sees the fees they set out (another pro on the project bills separately); the one paying sees them all
   if (side === "pro") q = q.eq("created_by", me ?? "");
   const { data } = await q;
-  const rows = (data ?? []) as { created_by: string; amount: number }[];
+  const rows = (data ?? []) as { created_by: string; amount: number; currency: string; payment_id: number | null }[];
   // who each fee is paid to (a studio's or company's name, else the person's), for the one paying
   const ids = [...new Set([...rows.map((m) => m.created_by), ...(me ? [me] : [])])];
-  const { data: names } = await supabaseAdmin().from("profiles").select("user_id, name, company, role").in("user_id", ids);
-  const people = (names ?? []) as { user_id: string; name: string; company: string | null; role: string }[];
+  const { data: names } = await supabaseAdmin().from("profiles").select("user_id, name, company, role, paypal_email").in("user_id", ids);
+  const people = (names ?? []) as { user_id: string; name: string; company: string | null; role: string; paypal_email: string | null }[];
+  // who can be paid through PayPal: a pro who connected it, for a fee in a currency PayPal takes
+  const onPayPal = new Set(people.filter((n) => n.paypal_email).map((n) => n.user_id));
   const to = new Map(people.map((n) => [n.user_id, n.company ?? n.name]));
   // the kind of pro asking decides how a total is split (a builder by stage of the build)
   const kind = side === "pro" ? (people.find((n) => n.user_id === me)?.role === "builder" ? "builder" : "architect") : null;
@@ -33,7 +36,7 @@ export async function GET(request: Request, ctx: RouteContext<"/api/projects/[id
     days: Math.max(1, Math.round((new Date(p.end_date).getTime() - new Date(p.start_date).getTime()) / day) + 1),
     done: p.status === "done",
   }));
-  return Response.json({ milestones: rows.map(({ created_by, ...m }) => ({ ...m, amount: Number(m.amount), to: to.get(created_by) ?? null })), side, kind, phases, movedIn: a.project.status === "done" });
+  return Response.json({ milestones: rows.map(({ created_by, payment_id, ...m }) => ({ ...m, amount: Number(m.amount), to: to.get(created_by) ?? null, paypal: onPayPal.has(created_by) && paypalTakes(m.currency), viaPayPal: payment_id !== null })), side, kind, phases, movedIn: a.project.status === "done" });
 }
 
 const Add = z.object({

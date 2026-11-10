@@ -8,8 +8,6 @@ import { confirmPick, resolvePicks } from "@/lib/plan-import/taste";
 import { missingForDesign } from "@/lib/interview/logic";
 import { picksOf, problems, toProject, type Answers } from "@/lib/interview/script";
 import { nameOf, postEvent } from "@/lib/project/thread";
-import { JUDGE_COOKIE } from "@/lib/demo/ids";
-import { readCookie } from "@/lib/auth/guest";
 
 // The scripted interview's last step: the browser sends every answer, this checks them against the script,
 // confirms the three taste picks with Qloo, and creates the project ready to design. No model runs here.
@@ -28,8 +26,6 @@ export async function POST(request: Request) {
   const body = Body.safeParse(await request.json().catch(() => null));
   if (!body.success) return Response.json({ error: "Something went wrong with your answers. Please start again." }, { status: 400 });
   const answers = body.data.answers as Answers;
-  // a visitor trying Arcon after the tour gets their design in full (see /demo?exit=start)
-  const judge = readCookie(request.headers.get("cookie"), JUDGE_COOKIE) === "1";
   // Filling a pro's project: only its owner (the architect or builder) or its client, and only while it waits.
   const into = body.data.projectId ? await accessTo(body.data.projectId, request.headers.get("cookie")) : null;
   if (body.data.projectId && (!into || into.project.status !== "interview" || !["owner", "architect", "client"].includes(into.role)))
@@ -52,7 +48,7 @@ export async function POST(request: Request) {
   const fields = { ...toProject(answers, body.data.lang), status: "designing" as const, taste_signals: signals, taste };
   const p = into
     ? await updateProject(into.project.id, { ...fields, title: into.project.title ?? fields.title })
-    : await createProject({ ...fields, guest_id: guestId, owner_id: userId, ...(judge ? { unlocked_at: new Date().toISOString() } : {}) });
+    : await createProject({ ...fields, guest_id: guestId, owner_id: userId });
   // The script is built to always meet what the design needs; if it ever doesn't, that's a bug, not the user's.
   const missing = missingForDesign(p);
   if (missing.length) {

@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { ProfileForm } from "@/components/account/ProfileForm";
 import { DeleteAccount } from "@/components/account/DeleteAccount";
 import { StudioConnections } from "@/components/account/StudioConnections";
+import { Billing } from "@/components/account/Billing";
 import { currentUser } from "@/lib/auth/server";
 import { PageLoading } from "@/components/fx/PageLoading";
 import { emailOf, getProfile } from "@/lib/account/profile";
@@ -22,16 +23,20 @@ async function AccountPageBody() {
   return (
     <main className="flex-1 px-4 py-10 sm:px-8">
       <ProfileForm initial={profile} email={email} next="/home" editing />
-      <section className="mx-auto mt-12 w-full max-w-2xl rounded-2xl border border-line bg-paper-raised p-5">
-        <p className="text-xs uppercase tracking-widest text-ink-soft">Plan</p>
-        <p className="mt-1 font-serif text-2xl">{PLAN_NAME[profile.plan]}</p>
-        <p className="mt-1 text-sm text-ink-soft">
-          Signed in as {email}.{" "}
-          <Link href="/?site#pricing" className="text-accent hover:underline">
-            See plans
-          </Link>
-        </p>
-      </section>
+      {profile.role === "architect" || profile.role === "builder" ? (
+        <Billing role={profile.role} plan={profile.plan} planUntil={profile.plan_until} trialUntil={profile.trial_until} subscribed={!!profile.paypal_subscription} paypalEmail={profile.paypal_email ?? null} />
+      ) : (
+        <section className="mx-auto mt-12 w-full max-w-2xl rounded-2xl border border-line bg-paper-raised p-5">
+          <p className="text-xs uppercase tracking-widest text-ink-soft">Plan</p>
+          <p className="mt-1 font-serif text-2xl">{PLAN_NAME[profile.plan]}</p>
+          <p className="mt-1 text-sm text-ink-soft">
+            Signed in as {email}.{" "}
+            <Link href="/?site#pricing" className="text-accent hover:underline">
+              See plans
+            </Link>
+          </p>
+        </section>
+      )}
       <StudioConnections />
       <DeleteAccount />
     </main>

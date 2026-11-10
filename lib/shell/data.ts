@@ -4,7 +4,9 @@ import { requestsFor } from "../pros/directory.ts";
 import { boardFor } from "../home/board.ts";
 import { sitesRunBy } from "../manage/data.ts";
 import { projectName } from "../home/names.ts";
-import { OPEN_FOR_JUDGING, stageOf } from "../project/stage.ts";
+import { stageOf } from "../project/stage.ts";
+import { unlockedFor } from "../project/unlock.ts";
+import { supabaseAdmin } from "../supabase/admin.ts";
 import type { ProjectRole } from "../project/access.ts";
 import type { Role } from "../account/roles.ts";
 
@@ -33,6 +35,12 @@ export async function shellFor(userId: string, day?: string): Promise<Shell | nu
   const pro = profile.role === "architect" || profile.role === "builder";
   const [own, shared, requests] = await Promise.all([projectsOf(userId), memberProjects(userId), pro ? requestsFor(userId) : []]);
   const all = [...own.map((p) => ({ ...p, role: "owner" as ProjectRole, owner: null as string | null })), ...shared].sort((a, b) => b.updated_at.localeCompare(a.updated_at)).slice(0, 60);
+  // the same rule the API uses (paid, a pro's plan or trial, or a demo), so the sidebar never offers what a route refuses.
+  // ponytail: a couple of queries per locked project, fine at 60; one batched query if sidebars get slow.
+  const locked = all.filter((p) => !p.unlocked_at).map((p) => p.id);
+  const { data: rows } = locked.length ? await supabaseAdmin().from("projects").select("id, owner_id, mode, unlocked_at").in("id", locked) : { data: [] };
+  const lockedRows = new Map(((rows ?? []) as Parameters<typeof unlockedFor>[0][]).map((r) => [r.id, r]));
+  const open = await Promise.all(all.map((p) => (p.unlocked_at ? true : lockedRows.has(p.id) ? unlockedFor(lockedRows.get(p.id)!).catch(() => false) : false)));
   const [board, runs] = await Promise.all([
     boardFor(
     userId,
@@ -55,7 +63,7 @@ export async function shellFor(userId: string, day?: string): Promise<Shell | nu
       unread: Object.values(board.unread).reduce((n, u) => n + u, 0),
       runs: runs.length,
     },
-    projects: all.map((p) => ({
+    projects: all.map((p, i) => ({
       id: p.id,
       name: projectName(p),
       role: p.role,
@@ -65,7 +73,7 @@ export async function shellFor(userId: string, day?: string): Promise<Shell | nu
       stage: stageOf(p as Parameters<typeof stageOf>[0]),
       chosen: p.chosen_option !== null,
       toured: !!p.toured_at,
-      unlocked: OPEN_FOR_JUDGING || !!p.unlocked_at,
+      unlocked: open[i],
       unread: board.unread[p.id] ?? 0,
       owner: p.owner ?? null,
     })),

@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { actionsFor, dueWhen, money, phaseSplit, splitWords, standardSplit, STATUS_LABEL, type FeeAction, type FeeSide, type FeeStatus, type ProKind } from "@/lib/project/fees";
-import { ok, tick } from "@/components/fx/sfx";
+import { chime, ok, tick } from "@/components/fx/sfx";
+import { finishOrder, PayPalButton, startOrder } from "@/components/pay/PayPalButton";
 
-type Milestone = { id: number; label: string; amount: number; currency: string; status: FeeStatus; to?: string | null; phase?: string | null };
+type Milestone = { id: number; label: string; amount: number; currency: string; status: FeeStatus; to?: string | null; phase?: string | null; paypal?: boolean; viaPayPal?: boolean };
 type Phase = { key: string; name: string; days: number; done: boolean };
 
 const CURRENCIES = ["INR", "USD", "GBP", "EUR", "AED", "SGD", "AUD", "CAD"];
@@ -32,6 +33,8 @@ export function Fees({ projectId, location }: { projectId: string; location?: st
   const [currency, setCurrency] = useState(guess(location));
   const [busy, setBusy] = useState<number | "add" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // the milestone whose PayPal buttons are open
+  const [paying, setPaying] = useState<number | null>(null);
 
   const load = useCallback(
     () =>
@@ -60,6 +63,14 @@ export function Fees({ projectId, location }: { projectId: string; location?: st
     void load();
     if (!res.ok) return setError((await res.json().catch(() => ({}))).error ?? "That didn't go through.");
     ok();
+  }
+
+  async function paid(orderId: string) {
+    setError(null);
+    await finishOrder(orderId);
+    chime();
+    setPaying(null);
+    void load();
   }
 
   function split() {
@@ -117,12 +128,24 @@ export function Fees({ projectId, location }: { projectId: string; location?: st
               </span>
               <span className="flex items-center gap-2">
                 <span className={`rounded-full px-2.5 py-0.5 text-xs ${PILL[m.status]}`}>{STATUS_LABEL[m.status]}</span>
+                {m.viaPayPal && <span className="text-xs text-leaf">via PayPal</span>}
+                {data.side === "payer" && m.paypal && (m.status === "billed" || m.status === "claimed") && (
+                  <button onClick={() => (tick(), setPaying(paying === m.id ? null : m.id))} className="glow-btn rounded-full px-3 py-1 text-xs">
+                    {paying === m.id ? "Close" : "Pay with PayPal"}
+                  </button>
+                )}
                 {actionsFor(m.status, data.side).map((a) => (
                   <button key={a} onClick={() => act(m, a)} disabled={busy === m.id} className="rounded-full border border-line px-3 py-1 text-xs transition hover:-translate-y-0.5 hover:border-accent hover:text-accent disabled:opacity-60">
                     {BUTTON[a]}
                   </button>
                 ))}
               </span>
+              {paying === m.id && (
+                <div className="w-full">
+                  <p className="text-xs text-ink-soft">Paid straight to {m.to ?? "your pro"} through PayPal. It settles here the moment it goes through.</p>
+                  <PayPalButton kind="order" currency={m.currency} createOrder={() => startOrder({ for: "fee", projectId, milestoneId: m.id })} onApprove={paid} onError={setError} />
+                </div>
+              )}
             </li>
           ))}
         </ul>

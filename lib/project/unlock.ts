@@ -1,5 +1,5 @@
 import { supabaseAdmin } from "../supabase/admin.ts";
-import { isUnlocked, OPEN_FOR_JUDGING } from "./stage.ts";
+import { isUnlocked } from "./stage.ts";
 import type { Project } from "./store.ts";
 
 // Whether a project is open: paid for, carried by a pro on it with a live plan or trial, or a demo.
@@ -17,7 +17,7 @@ export const proUntil = (p: Pick<Pro, "plan" | "plan_until" | "trial_until">) =>
  * has a paid plan; a trial alone doesn't open someone else's project (Vicky, 16 Oct).
  */
 export async function unlockedFor(p: Pick<Project, "id" | "owner_id" | "unlocked_at" | "mode">): Promise<boolean> {
-  if (OPEN_FOR_JUDGING || p.unlocked_at) return true;
+  if (p.unlocked_at) return true;
   const db = supabaseAdmin();
   const { data: members } = await db.from("project_members").select("user_id").eq("project_id", p.id).in("role", ["architect", "builder"]);
   const ids = [p.owner_id, ...(members ?? []).map((m) => m.user_id)].filter((x): x is string => !!x);
@@ -28,7 +28,7 @@ export async function unlockedFor(p: Pick<Project, "id" | "owner_id" | "unlocked
   return isUnlocked(p, until, Date.now(), pros.some((x) => x.demo));
 }
 
-/** Unlock a project by paying for it once. ponytail: free until PayPal checkout lands (R5); then only the webhook calls this. */
+/** Unlock a project once PayPal has captured its payment (lib/paypal/settle.ts is the only caller). */
 export async function unlockProject(id: string) {
   const { error } = await supabaseAdmin().from("projects").update({ unlocked_at: new Date().toISOString() }).eq("id", id).is("unlocked_at", null);
   if (error) throw new Error(error.message);

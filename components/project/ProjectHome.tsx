@@ -14,6 +14,7 @@ import type { Layout } from "@/lib/layout/schema";
 import { ROLE_NAME, can, type MemberRole, type ProjectRole } from "@/lib/project/access";
 import { nextLine, STAGES, stageOf, tabsFor, unlockPrice, type Tab } from "@/lib/project/stage";
 import { chime, ok, tick } from "@/components/fx/sfx";
+import { finishOrder, PayPalButton, startOrder } from "@/components/pay/PayPalButton";
 
 type Home = {
   id: string;
@@ -218,24 +219,16 @@ function Overview({ p, role, whose, unlocked, go, onSite, onThread, onTeam, onUn
   );
 }
 
-// The unlock card. ponytail: unlocking is free until PayPal checkout lands (R5); the button says so plainly.
+// The unlock card: one PayPal payment opens the project. The server makes the order at the project's own price and
+// opens the project only once PayPal has captured it.
 // `lead`: what the step behind it opens, when it stands in for one step of the guided tour.
 export function Unlock({ p, role, onUnlocked, lead }: { p: Pick<Home, "id" | "space_type">; role: ProjectRole; onUnlocked: () => void; lead?: string }) {
-  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const price = unlockPrice(p.space_type);
-  async function unlock() {
-    setBusy(true);
+  async function paid(orderId: string) {
     setError(null);
-    const res = await fetch(`/api/projects/${p.id}/unlock`, { method: "POST" });
-    setBusy(false);
-    if (res.status === 401) {
-      // a guest signs in (their project comes with them), then lands back here to unlock
-      window.location.assign(`/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`);
-      return;
-    }
-    if (!res.ok) return setError((await res.json().catch(() => ({}))).error ?? "Couldn't unlock. Please try again.");
+    await finishOrder(orderId);
     chime();
     // a moment to see it worked, then the project opens up
     setDone(true);
@@ -257,9 +250,7 @@ export function Unlock({ p, role, onUnlocked, lead }: { p: Pick<Home, "id" | "sp
         changes, every download and inviting your architect or builder. One payment of ${price} for this project.
       </p>
       {role === "owner" ? (
-        <button onClick={unlock} disabled={busy} className="glow-btn mt-4 rounded-full px-6 py-2.5 text-sm disabled:opacity-60">
-          {busy ? "Unlocking…" : `Unlock for $${price} · free during the preview`}
-        </button>
+        <PayPalButton kind="order" currency="USD" createOrder={() => startOrder({ for: "unlock", projectId: p.id })} onApprove={paid} onError={setError} />
       ) : (
         <p className="mt-4 text-sm">Ask the project&apos;s owner to unlock it.</p>
       )}
