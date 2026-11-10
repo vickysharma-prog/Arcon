@@ -1,0 +1,26 @@
+import { userOf } from "@/lib/auth/request";
+import { captureOrder, getOrder, PayPalError } from "@/lib/paypal/client";
+import { paymentForOrder, settleOrder } from "@/lib/paypal/settle";
+
+// The buyer approved the payment in PayPal: capture it, and open what it paid for. Only the person who started the
+// order may capture it, and only an order Arcon wrote down. A capture that already happened (a retry, or the webhook
+// got there first) is read back instead of failing.
+export async function POST(request: Request, ctx: RouteContext<"/api/paypal/orders/[orderId]/capture">) {
+  const { orderId } = await ctx.params;
+  const me = await userOf(request.headers.get("cookie"));
+  if (!me || !/^[A-Z0-9]{10,30}$/.test(orderId)) return Response.json({ error: "not found" }, { status: 404 });
+  const row = await paymentForOrder(orderId);
+  if (!row || row.payer_id !== me) return Response.json({ error: "not found" }, { status: 404 });
+
+  let order;
+  try {
+    order = await captureOrder(orderId);
+  } catch (e) {
+    if (e instanceof PayPalError && e.issue === "ORDER_ALREADY_CAPTURED") order = await getOrder(orderId);
+    else if (e instanceof PayPalError && e.issue === "INSTRUMENT_DECLINED") return Response.json({ error: "PayPal declined that way to pay. Pick another one.", retry: true }, { status: 402 });
+    else return Response.json({ error: "PayPal couldn't take the payment. Nothing was charged." }, { status: 502 });
+  }
+  const s = await settleOrder(order);
+  if (!s.ok) return Response.json({ error: s.reason === "not-paid" ? "The payment hasn't gone through yet." : "That payment didn't match. Nothing was opened." }, { status: 409 });
+  return Response.json({ ok: true, kind: s.kind });
+}

@@ -11,7 +11,8 @@ export type ThreadEvent =
   | { type: "review"; version: number }
   | { type: "approved"; version: number; note?: string | null; for?: string | null }
   | { type: "changes"; version: number; note?: string | null; for?: string | null }
-  | { type: "fee"; action: "added" | "bill" | "paid" | "received"; label: string; amount: string }
+  | { type: "fee"; action: "added" | "bill" | "paid" | "received" | "paypal"; label: string; amount: string }
+  | { type: "unlocked"; amount: string }
   | { type: "handover"; to: string }
   | { type: "movein"; what: "snag" | "fixed" | "closed" | "reopened" | "pack" | "moved"; note?: string | null; for?: string | null }
   | { type: "change"; what: "asked" | "approved" | "declined"; version: number; cost?: string; note?: string | null; for?: string | null }
@@ -45,7 +46,11 @@ export function eventText(e: ThreadEvent, who: string): string {
           ? `${who} billed ${e.label}: ${e.amount}.`
           : e.action === "paid"
             ? `${who} marked ${e.label} as paid (${e.amount}).`
+            : e.action === "paypal"
+              ? `${who} paid ${e.label} with PayPal: ${e.amount}. Settled.`
             : `${who} confirmed receiving ${e.label} (${e.amount}).`;
+    case "unlocked":
+      return `${who} unlocked the project (${e.amount}, paid with PayPal): the budget, shopping list, changes and drawings are open.`;
     case "site":
       return e.what === "started"
         ? `${who} started the building site. First up: ${e.name}.`
