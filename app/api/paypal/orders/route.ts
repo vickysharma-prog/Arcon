@@ -3,8 +3,8 @@ import { accessTo, userOf } from "@/lib/auth/request";
 import { sideOf } from "@/lib/project/fees";
 import { unlockPrice } from "@/lib/project/stage";
 import { createOrder, paypalReady } from "@/lib/paypal/client";
-import { paypalTakes, type Purpose } from "@/lib/paypal/order";
-import { recordOrder } from "@/lib/paypal/settle";
+import { paypalTakes, purposeId, type Purpose } from "@/lib/paypal/order";
+import { alreadyPaid, recordOrder } from "@/lib/paypal/settle";
 import { supabaseAdmin } from "@/lib/supabase/admin";
 
 const Body = z.discriminatedUnion("for", [
@@ -51,6 +51,7 @@ export async function POST(request: Request) {
     description = `${m.label} for ${a.project.title ?? "your project"}, to ${pro.company ?? pro.name}`;
   }
 
+  if (await alreadyPaid(purposeId(purpose))) return no("This is already paid.", 409);
   try {
     const order = await createOrder({ purpose, amount, currency, description, payeeEmail });
     await recordOrder({ purpose, orderId: order.id, amount, currency, payerId: me, projectId: b.projectId, payeeEmail });

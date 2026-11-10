@@ -1,6 +1,6 @@
 import { userOf } from "@/lib/auth/request";
 import { captureOrder, getOrder, PayPalError } from "@/lib/paypal/client";
-import { paymentForOrder, settleOrder } from "@/lib/paypal/settle";
+import { paymentForOrder, settleOrder, stillOwed } from "@/lib/paypal/settle";
 
 // The buyer approved the payment in PayPal: capture it, and open what it paid for. Only the person who started the
 // order may capture it, and only an order Arcon wrote down. A capture that already happened (a retry, or the webhook
@@ -11,6 +11,9 @@ export async function POST(request: Request, ctx: RouteContext<"/api/paypal/orde
   if (!me || !/^[A-Z0-9]{10,30}$/.test(orderId)) return Response.json({ error: "not found" }, { status: 404 });
   const row = await paymentForOrder(orderId);
   if (!row || row.payer_id !== me) return Response.json({ error: "not found" }, { status: 404 });
+
+  // paid already another way (another tab, the manual route, or it was unlocked meanwhile): don't take the money twice
+  if (row.status === "created" && !(await stillOwed(row))) return Response.json({ error: "This is already paid, so nothing was charged." }, { status: 409 });
 
   let order;
   try {

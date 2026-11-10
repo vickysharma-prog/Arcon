@@ -41,6 +41,30 @@ export async function recordOrder(r: { purpose: Purpose; orderId: string; amount
 export const paymentForOrder = async (orderId: string) =>
   ((await supabaseAdmin().from("payments").select("id, kind, purpose, project_id, milestone_id, payer_id, order_id, amount, currency, status").eq("order_id", orderId).maybeSingle()).data as PaymentRow | null);
 
+/** Whether a purpose has already been paid through PayPal (any completed payment for it). */
+export async function alreadyPaid(purpose: string): Promise<boolean> {
+  const { count } = await supabaseAdmin().from("payments").select("id", { count: "exact", head: true }).eq("purpose", purpose).eq("status", "completed");
+  return (count ?? 0) > 0;
+}
+
+/**
+ * Whether what an order pays for is still owed, read just before capturing it, so a second order for the same
+ * thing (two tabs, Pay pressed twice) is never charged: the project still locked, the fee still billed.
+ */
+export async function stillOwed(row: Pick<PaymentRow, "kind" | "purpose" | "project_id" | "milestone_id">): Promise<boolean> {
+  if (await alreadyPaid(row.purpose)) return false;
+  const db = supabaseAdmin();
+  if (row.kind === "unlock" && row.project_id) {
+    const { data } = await db.from("projects").select("unlocked_at").eq("id", row.project_id).maybeSingle();
+    return !!data && !data.unlocked_at;
+  }
+  if (row.kind === "fee" && row.milestone_id) {
+    const { data } = await db.from("milestones").select("status").eq("id", row.milestone_id).maybeSingle();
+    return data?.status === "billed" || data?.status === "claimed";
+  }
+  return false;
+}
+
 export type Settled = { ok: true; kind: Purpose["kind"]; already: boolean } | { ok: false; reason: "not-paid" | "unknown" | "mismatch" };
 
 /** Settle a captured order: check it is the one Arcon made, for the amount it asked, then open what it paid for. */
