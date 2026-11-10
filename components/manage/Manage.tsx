@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Reveal } from "@/components/fx/Motion";
 import { ok, tick } from "@/components/fx/sfx";
@@ -60,7 +60,11 @@ const TONE: Record<string, string> = { planned: "text-ink-soft border-line", bil
 
 export function FeeLedger({ lines, totals, pro }: { lines: LedgerLine[]; totals: LedgerTotals[]; pro: boolean }) {
   const { act, busy, error } = useAct();
+  // ?all opens on every fee, settled ones too (the tour shows what clients paid through PayPal)
   const [show, setShow] = useState<"open" | "all">("open");
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("all")) setShow("all");
+  }, []);
   const shown = show === "open" ? lines.filter((l) => l.status !== "received") : lines;
   if (!lines.length)
     return (
