@@ -35,10 +35,26 @@ export function Fees({ projectId, location }: { projectId: string; location?: st
   const [error, setError] = useState<string | null>(null);
   // the milestone whose PayPal buttons are open
   const [paying, setPaying] = useState<number | null>(null);
+  // a note Arcon's agent is drafting or has drafted for one milestone: a bill, a reminder, or what it's for
+  const [note, setNote] = useState<{ id: number; kind: "bill" | "remind" | "explain"; text: string | null; by?: "agent" | "plain" } | null>(null);
+
+  async function askArcon(m: Milestone, kind: "bill" | "remind" | "explain") {
+    tick();
+    setError(null);
+    setPaying(null);
+    setNote({ id: m.id, kind, text: null });
+    const res = await fetch(`/api/projects/${projectId}/fees/${m.id}/note`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ kind }) });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setNote(null);
+      return setError(j.error ?? "Arcon couldn't write that just now.");
+    }
+    setNote({ id: m.id, kind, text: j.text, by: j.by });
+  }
 
   const load = useCallback(
     () =>
-      fetch(`/api/projects/${projectId}/fees`)
+      fetch(`/api/projects/${projectId}/fees`, { cache: "no-store" })
         .then((r) => (r.ok ? r.json() : null))
         .then((d) => setData(d))
         .catch(() => {}),
@@ -53,11 +69,11 @@ export function Fees({ projectId, location }: { projectId: string; location?: st
   const got = data.milestones.filter((m) => m.status === "received").reduce((s, m) => s + m.amount, 0);
   const cur = data.milestones[0]?.currency ?? currency;
 
-  async function act(m: Milestone, action: FeeAction) {
+  async function act(m: Milestone, action: FeeAction | "remind", note?: string) {
     tick();
     setBusy(m.id);
     setError(null);
-    const res = await fetch(`/api/projects/${projectId}/fees/${m.id}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action }) });
+    const res = await fetch(`/api/projects/${projectId}/fees/${m.id}`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action, ...(note ? { note } : {}) }) });
     setBusy(null);
     // Refresh either way, so a step someone else just took (or a double click) shows as it is.
     void load();
@@ -134,12 +150,59 @@ export function Fees({ projectId, location }: { projectId: string; location?: st
                     {paying === m.id ? "Close" : "Pay with PayPal"}
                   </button>
                 )}
+                {data.side === "payer" && (m.status === "billed" || m.status === "claimed") && (
+                  <button onClick={() => askArcon(m, "explain")} className="text-xs text-ink-soft hover:text-accent">
+                    What is this for?
+                  </button>
+                )}
+                {data.side === "pro" && m.status === "billed" && (
+                  <button onClick={() => askArcon(m, "remind")} disabled={busy === m.id} className="rounded-full border border-line px-3 py-1 text-xs transition hover:-translate-y-0.5 hover:border-accent hover:text-accent disabled:opacity-60">
+                    Remind
+                  </button>
+                )}
                 {actionsFor(m.status, data.side).map((a) => (
-                  <button key={a} onClick={() => act(m, a)} disabled={busy === m.id} className="rounded-full border border-line px-3 py-1 text-xs transition hover:-translate-y-0.5 hover:border-accent hover:text-accent disabled:opacity-60">
-                    {BUTTON[a]}
+                  <button
+                    key={a}
+                    // billing goes through Arcon's note first: the agent drafts what this stage covered, the pro sends it
+                    onClick={() => (a === "bill" ? askArcon(m, "bill") : act(m, a))}
+                    disabled={busy === m.id}
+                    className="rounded-full border border-line px-3 py-1 text-xs transition hover:-translate-y-0.5 hover:border-accent hover:text-accent disabled:opacity-60"
+                  >
+                    {a === "bill" ? "Bill…" : BUTTON[a]}
                   </button>
                 ))}
               </span>
+              {note?.id === m.id && (
+                <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} className="w-full rounded-xl border border-accent/30 bg-accent/5 p-3">
+                  <p className="text-[11px] uppercase tracking-widest text-accent">
+                    {note.text === null ? "Arcon is reading the project…" : note.kind === "explain" ? "Arcon explains" : note.by === "agent" ? "Drafted by Arcon from the project's record · edit anything" : "A plain note · edit anything"}
+                  </p>
+                  {note.text === null ? (
+                    <div className="mt-2 h-14 animate-pulse rounded-lg bg-line/60" />
+                  ) : note.kind === "explain" ? (
+                    <p className="mt-2 text-sm">{note.text}</p>
+                  ) : (
+                    <>
+                      <textarea value={note.text} onChange={(e) => setNote({ ...note, text: e.target.value })} rows={4} aria-label="The note your client gets" className="mt-2 w-full rounded-lg border border-line bg-paper p-2 text-sm" />
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <button
+                          onClick={async () => {
+                            await act(m, note.kind === "bill" ? "bill" : "remind", note.text ?? undefined);
+                            setNote(null);
+                          }}
+                          disabled={busy === m.id || !note.text?.trim()}
+                          className="glow-btn rounded-full px-4 py-1.5 text-xs disabled:opacity-60"
+                        >
+                          {note.kind === "bill" ? `Send the bill · ${money(m.amount, m.currency)}` : "Send the reminder"}
+                        </button>
+                        <button onClick={() => setNote(null)} className="text-xs text-ink-soft hover:text-accent">
+                          Cancel
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </motion.div>
+              )}
               {paying === m.id && (
                 <div className="w-full">
                   <p className="text-xs text-ink-soft">Paid straight to {m.to ?? "your pro"} through PayPal. It settles here the moment it goes through.</p>
