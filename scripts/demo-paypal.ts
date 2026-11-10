@@ -65,9 +65,11 @@ async function billAndPay(p: { id: string; title: string }, f: Fee, pro: Who, pa
 async function billWithNote(p: { id: string; title: string }, f: Fee, pro: Who, client: string) {
   if (f.status !== "planned") return;
   const { data: last } = await db.from("milestones").select("billed_at").eq("project_id", p.id).eq("created_by", pro.id).not("billed_at", "is", null).order("billed_at", { ascending: false }).limit(1).maybeSingle();
-  let q = db.from("messages").select("body, data").eq("project_id", p.id).eq("kind", "event").order("created_at").limit(80);
+  let q = db.from("messages").select("body, data, author_id").eq("project_id", p.id).eq("kind", "event").order("created_at").limit(80);
   if (last?.billed_at) q = q.gt("created_at", last.billed_at);
-  const done = (((await q).data ?? []) as { body: string; data: { type?: string } }[]).filter((e) => e.data?.type !== "fee" && e.data?.type !== "unlocked").map((e) => e.body).slice(-12);
+  // the pro's own work and the client's answers, never the other pro's (the same rule as the app's note route)
+  const other = pro.id === LENA.id ? MIKE.id : LENA.id;
+  const done = (((await q).data ?? []) as { body: string; data: { type?: string }; author_id: string | null }[]).filter((e) => e.data?.type !== "fee" && e.data?.type !== "unlocked" && e.author_id !== other).map((e) => e.body).slice(-12);
   const note = await draftNote({ kind: "bill", pro: pro.company, client, project: p.title, milestone: { label: f.label, amount: Number(f.amount), currency: f.currency, billedDaysAgo: null }, done, paypal: true }, chatModel());
   const amount = money(Number(f.amount), f.currency);
   await db.from("milestones").update({ status: "billed", billed_at: new Date(Date.now() - 2 * DAY).toISOString() }).eq("id", f.id);

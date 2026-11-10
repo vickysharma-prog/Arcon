@@ -5,6 +5,7 @@ import { sideOf } from "@/lib/project/fees";
 import { draftNote, type NoteKind } from "@/lib/project/feeNotes";
 import { paypalTakes } from "@/lib/paypal/order";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { peopleOn } from "@/lib/project/thread";
 
 const Body = z.object({ kind: z.enum(["bill", "remind", "explain"]) });
 const DAY = 86_400_000;
@@ -30,10 +31,15 @@ export async function POST(request: Request, ctx: RouteContext<"/api/projects/[i
 
   // what happened since this pro last billed (or since the project began): the thread's own events, fee steps left out
   const { data: last } = await db.from("milestones").select("billed_at").eq("project_id", id).eq("created_by", m.created_by).not("billed_at", "is", null).neq("id", m.id).order("billed_at", { ascending: false }).limit(1).maybeSingle();
-  let q = db.from("messages").select("body, data, created_at").eq("project_id", id).eq("kind", "event").order("created_at", { ascending: true }).limit(60);
+  let q = db.from("messages").select("body, data, created_at, author_id").eq("project_id", id).eq("kind", "event").order("created_at", { ascending: true }).limit(80);
   if (last?.billed_at) q = q.gt("created_at", last.billed_at);
   const { data: events } = await q;
-  const done = ((events ?? []) as { body: string; data: { type?: string } }[]).filter((e) => e.data?.type !== "fee" && e.data?.type !== "unlocked").map((e) => e.body.replace(/\s+/g, " ").slice(0, 200)).slice(-12);
+  // this pro's own work and the client's answers, never another pro's (an architect's bill doesn't claim the build)
+  const others = new Set((await peopleOn(a.project)).filter((x) => x.user_id !== m.created_by && (x.role === "architect" || x.role === "builder")).map((x) => x.user_id));
+  const done = ((events ?? []) as { body: string; data: { type?: string }; author_id: string | null }[])
+    .filter((e) => e.data?.type !== "fee" && e.data?.type !== "unlocked" && !(e.author_id && others.has(e.author_id)))
+    .map((e) => e.body.replace(/\s+/g, " ").slice(0, 200))
+    .slice(-12);
 
   const [{ data: pro }, { data: owner }] = await Promise.all([
     db.from("profiles").select("name, company, paypal_email").eq("user_id", m.created_by).maybeSingle(),
