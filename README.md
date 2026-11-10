@@ -7,7 +7,8 @@ Tell Arcon about the space and three things you love: a place, a brand, a film o
 Live at **[arcon-ten.vercel.app](https://arcon-ten.vercel.app)**.
 
 - **Stack:** Next.js 16 (App Router, Cache Components) · React 19 · TypeScript · AI SDK 7 · eve · a taste graph API · three.js (React Three Fiber) · Supabase (Postgres, Auth, Storage) · Vercel (Fluid Compute).
-- **Quality:** 416 unit tests, integration checks against the real services, 19 agent evals, live checks after every deploy, and end-to-end journeys run in the browser on desktop and phone.
+- **Payments:** PayPal (Orders, Subscriptions and Webhooks, in the sandbox), with Arcon's agent writing the words around every bill.
+- **Quality:** 443 unit tests, integration checks against the real services (PayPal sandbox included), 19 agent evals, live checks after every deploy, and end-to-end journeys run in the browser on desktop and phone.
 
 ---
 
@@ -16,7 +17,7 @@ Live at **[arcon-ten.vercel.app](https://arcon-ten.vercel.app)**.
 **Open [arcon-ten.vercel.app/demo](https://arcon-ten.vercel.app/demo)** for the guided tour, or press "Take the tour" on [arcon-ten.vercel.app](https://arcon-ten.vercel.app). No sign-in, nothing to install. On a phone, add it to your home screen and it runs as an app.
 
 - **A guided tour, 12 stops in three chapters** (about three minutes): Maya's interview plays itself and Arcon reads her three picks; her style, three plans, the 3D walk, the budget, the shopping list and the drawings; then her architect's studio, her builder's site and another client's last week before moving in; then a Brooklyn café designed against its own street, by night. Switch between the homeowner, architect, builder and café owner at any stop.
-- **Then "Try it yourself":** a fresh interview in any language, your own three picks read for taste, and a complete design of your own, with every feature open.
+- **Then "Try it yourself":** a fresh interview in any language, your own three picks read for taste, and a design of your own. The style, the three plans and the 3D from outside are free; unlocking the rest is one PayPal payment (sandbox, see below).
 - The tour's world is seeded through the real app, so it is the same for every visitor and never waits on a model.
 
 **Five minutes in the code, in this order:**
@@ -27,6 +28,36 @@ Live at **[arcon-ten.vercel.app](https://arcon-ten.vercel.app)**.
 4. `lib/design/options.ts`: why each plan fits you, ranked from your answers and your taste.
 5. `lib/neighbourhood/`: a business read against its street with taste heatmaps and local places.
 6. `lib/layout/` and `lib/three/`: the layout engine, its validator, and the 3D built from the same plan.
+
+## Payments with PayPal
+
+Money in Arcon follows the project. Each person pays, or gets paid, at the point in their own work where it happens, and Arcon's agent writes the words around every bill.
+
+| Who | Where | What happens | PayPal |
+|---|---|---|---|
+| Homeowner or business owner | A locked step (budget, shopping list, changes, drawings) | One payment of $149 ($299 for a business) opens the project. It opens only after PayPal has captured the money, and the thread says so. | Orders v2, capture on the server |
+| Architect or builder | Account, "Plan and payments" | Studio ($99 a month or $990 a year) or Build ($299 or $2,990). A trial that is still running stays free: the first charge waits for its end. Cancel any time; the plan runs to the end of what was paid. | Subscriptions, plans made by `scripts/paypal-setup.ts` |
+| Architect or builder | Account, "Get paid with PayPal" | Connects the PayPal account their clients pay into. Arcon never holds the money. | Orders v2 with the pro as `payee` |
+| Architect or builder | Project, Fees, "Bill…" | Arcon's agent reads the project's record since the last bill (approvals, changes, site phases signed off) and drafts the note that goes with the bill. The pro edits it and sends it, and the bill and the note land in the thread. "Remind" drafts a kind reminder for a fee that is still open. | |
+| Client | Project, Fees, "Pay with PayPal" | Pays a billed fee straight into the pro's PayPal, by PayPal, Pay Later or card. It settles on the project the moment it goes through. "What is this for?" asks Arcon to explain the fee from the record. | Orders v2, capture, webhook |
+
+**The rules the money follows** (`lib/paypal/`):
+
+- **The browser never sets an amount or a payee.** It only says what it wants to pay for. The server builds the order from Arcon's own records: the project's price, or the milestone the pro set out.
+- **Every order names what it pays for** in its `custom_id` (`unlock:<project>`, `fee:<milestone>`, `plan:<user>:<plan>`). A capture or a webhook can only settle that one thing, and only for the exact amount and currency asked for (`lib/paypal/order.ts`).
+- **Settled once.** Each order is written down when it is made, and it moves from created to completed exactly once, whether the capture route or the webhook gets there first. Before capturing, Arcon checks the thing is still owed, so two tabs or a double click never charge twice (`lib/paypal/settle.ts`).
+- **Webhooks are verified by PayPal**, then Arcon reads the order or subscription back from PayPal before acting on it (`app/api/billing/paypal/route.ts`).
+- **The agent never decides money.** It writes words only. A draft that names any amount other than the fee's own is thrown away for a plain note, and nothing is sent until the pro sends it (`lib/project/feeNotes.ts`, with tests).
+- **Currencies:** PayPal's buttons show for the currencies PayPal Checkout takes (USD, EUR, GBP, CAD, AUD, SGD and more). A fee in INR stays on the manual "I've paid", then "Received" steps.
+
+**Try a payment yourself (sandbox, no real money):**
+
+1. Open the tour at [arcon-ten.vercel.app/demo](https://arcon-ten.vercel.app/demo) and look at Maya's house as Lena, the architect, or as Maya. Lena's first fee shows as paid via PayPal, and the next one waits with the note Arcon drafted.
+2. Then press "Try it yourself", design your own space, sign in with any email, and open the budget step. Pay with **"Debit or Credit Card"** using PayPal's sandbox test card `4111 1111 1111 1111`, any future expiry, any 3-digit code, any name, ZIP `94105` and phone `415 555 0100`. The project unlocks the moment it goes through. A PayPal sandbox personal account works as well.
+
+**Checked:** unit tests for every rule above (`lib/paypal/*.test.ts`, `lib/project/feeNotes.test.ts`), and `scripts/paypal-check.ts`, which runs against the PayPal sandbox and the database. It pays a fee into the architect's PayPal, settles it once, refuses a second payment, unlocks a project, and refuses a payment for the wrong amount.
+
+---
 
 ## Taste behind every decision
 
@@ -70,6 +101,7 @@ The client (`lib/qloo/client.ts`) caches every answer in the project database an
 ## Contents
 
 1. [Try it](#try-it)
+1. [Payments with PayPal](#payments-with-paypal)
 1. [Taste behind every decision](#taste-behind-every-decision)
 1. [Who it's for](#who-its-for)
 2. [Architecture](#architecture)
@@ -282,7 +314,7 @@ flowchart LR
 - **Roles per project:** owner, architect, builder, client, viewer, checked by one `can(role, action)` table and by every API route. One client per project, on a pro's project only. A pro whose plan has lapsed keeps their projects read-only; the site stays open.
 - **Team:** invite by link or QR (the panel opens on the role you asked for), or an owner finds a pro in **Find a pro**, ranked by how close the pro's past work is to the owner's taste. A pro sees the design before accepting, then answers right on the project.
 - **The thread:** one conversation per project, room by room, with photos and files, every approval and change request on record, and a team-only channel once two pros are on it. The bell marks a notification read only when it's opened; phases finish quietly.
-- **Fees:** a pro sets out a fee once; an architect's splits by design stage, a builder's by stage of the build; every name and amount editable. Billed, paid, received; overdue after 14 days; the payer always sees who each fee is to.
+- **Fees:** a pro sets out a fee once; an architect's splits by design stage, a builder's by stage of the build; every name and amount editable. Billed, paid, received; overdue after 14 days; the payer always sees who each fee is to. The client can pay a billed fee with PayPal straight into the pro's account, and it settles at once; the agent drafts the note with each bill (see [Payments with PayPal](#payments-with-paypal)).
 - **The site:** phases with dates, tasks, crew and attendance, wages, materials taken off the plan, orders and deliveries, photo updates and late alerts. The client sees progress and the budget, never the builder's own costs. An owner can run the build themselves.
 - **Moving in:** the client lists snags room by room; whoever runs the site fixes them; the client signs each off. The handover pack (warranty, notes, drawings), a warning if fees are unsettled, the client accepts the handover and the warranty starts that day. Reviews go on the pro's profile and the pro is told.
 - **Business views:** fee ledger, crew and wages across sites, materials and deliveries, site money (budget against spend).
@@ -340,7 +372,10 @@ erDiagram
 | Unit | 394 tests: layout engine and validator, every edit, taste weighting, budget and markets, fees, roles, move-in, notifications, interview logic | `lib/**/*.test.ts` with `node --test` |
 | Integration | The design pipeline and the project store against the real services | `lib/**/*.integration.ts` |
 | Agent evals | 17 eve evals: one question at a time, all-at-once answers, Hindi, Hinglish, metric, off-topic, no match, ambiguous, prompt injection, cafés, offices, hotels | `agents/interviewer/evals/` |
-| Live checks | After every deploy, as the test accounts, from the server: pages, roles and permissions, the site, the taste strip, the quiz, the sidebar, the business views, moving in | `scripts/live-check.ts` |
+| Live checks | After every deploy, as the test accounts, from the server: pages, roles and permissions, the site, the taste strip, the quiz, the sidebar, the business views, moving in | `scripts/paypal-setup.ts` | Makes the PayPal product, the four plans and the webhook, once per app |
+| `scripts/paypal-check.ts` | Pays a fee, an unlock and a wrong amount against the PayPal sandbox and the database |
+| `scripts/demo-paypal.ts` | Puts PayPal into the demo world (a paid fee, a billed one with the agent's note) |
+| `scripts/live-check.ts` |
 | End to end | Eight journeys by hand in Chrome (a guest's house to move-in, Find a pro, an architect with a client by link and in person, design-and-build, a café, a self-build, phone width), re-run after every round of fixes | run notes |
 
 `npm test`, `npx tsc --noEmit` and `npx eslint` pass before every commit; `next build` before every push.
@@ -391,6 +426,8 @@ npx tsc --noEmit && npx eslint # types and lint
 ```
 
 **Environment** (see `.env.example`): `QLOO_API_KEY`, `ARCON_SESSION_SECRET` (32+ random characters; signs the cookies), `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `POSTGRES_URL_NON_POOLING` (for migrations), and a model key (`GOOGLE_GENERATIVE_AI_API_KEY`, or `ANTHROPIC_API_KEY`, or an AI Gateway key). `ARCON_MODEL` picks the model.
+
+**PayPal (sandbox):** `PAYPAL_ENV=sandbox`, `PAYPAL_CLIENT_ID`, `NEXT_PUBLIC_PAYPAL_CLIENT_ID` (the same id, for the buttons), `PAYPAL_CLIENT_SECRET` from a sandbox REST app at developer.paypal.com. Then run `node --env-file=.env scripts/paypal-setup.ts https://your-site/api/billing/paypal` once. It makes the product, the four plans (`PAYPAL_PLAN_*`) and the webhook (`PAYPAL_WEBHOOK_ID`).
 
 **Useful scripts**
 
