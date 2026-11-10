@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Thank you · Arcon" };
 const STORY = [
   ["Taste", "Maya talked about her family and tapped three things she loves. Arcon turned them into a style: words, materials, brands, art and a playlist, each with its source."],
   ["Design", "Arcon drew three plans that fit how she lives, then the 3D, a budget in dollars, a shopping list and the drawings for her builder."],
-  ["Team", "Lena the architect and Mike the builder worked from the same project: one thread, the quote, the site, every fee and sign-off."],
+  ["Team", "Lena the architect and Mike the builder worked from the same project: one thread, the quote, the site, every sign-off. Maya paid each fee with PayPal straight to them, and Arcon drafted the note on every bill."],
   ["Keys", "Ana's apartment went from snag list to handover, and Sam's café was read against the people already on its street."],
 ];
 
@@ -45,8 +45,12 @@ export default function Done() {
 
       <Reveal delay={0.6}>
         <div className="mt-9 flex max-w-2xl flex-col items-center text-center">
-          <h2 className="font-serif text-3xl">Now design your own, freely.</h2>
-          <p className="mt-3 text-ink-soft">Any home or business, in any language, with no sign-in. Every answer, plan, change and payment stays on one record that everyone on the project can follow.</p>
+          <h2 className="font-serif text-3xl">Now design your own.</h2>
+          <p className="mt-3 text-ink-soft">Any home or business, in any language. Your style, three plans and the 3D from outside are free with no sign-in; sign in and unlock the rest with one PayPal payment. Every answer, plan, change and payment stays on one record that everyone on the project can follow.</p>
+          <p className="mt-3 rounded-xl border border-accent/30 bg-accent/5 px-4 py-2.5 text-sm text-ink-soft">
+            PayPal runs in its sandbox here, so no real money moves. Pay with <span className="text-ink">Debit or Credit Card</span> using{" "}
+            <span className="font-mono text-ink">4111 1111 1111 1111</span>, any future expiry and any 3-digit code, ZIP <span className="font-mono text-ink">94105</span>, phone <span className="font-mono text-ink">415 555 0100</span>.
+          </p>
           <a href="/demo?exit=start" className="glow-btn mt-6 px-9 py-4 text-lg">
             Try it yourself
           </a>
