@@ -29,3 +29,6 @@ alter table profiles add column if not exists paypal_subscription text;
 
 -- a fee paid through PayPal says so, with the payment it came from
 alter table milestones add column if not exists payment_id bigint references payments (id) on delete set null;
+
+-- Every project made while Arcon was open to everyone stays open: unlocking by payment starts with new projects.
+update projects set unlocked_at = now() where unlocked_at is null;
