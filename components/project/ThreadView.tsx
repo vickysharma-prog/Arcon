@@ -106,6 +106,8 @@ export function ThreadView({
   useEffect(() => {
     const n = t?.messages.length ?? 0;
     if (n !== seen.current) list.current?.scrollTo({ top: list.current.scrollHeight, behavior: seen.current ? "smooth" : "auto" });
+    // a link to #latest (the tour) also brings the newest messages into the page's view on the first load
+    if (n && !seen.current && window.location.hash === "#latest") setTimeout(() => list.current?.scrollIntoView({ behavior: "smooth", block: "end" }), 300);
     seen.current = n;
   }, [t?.messages.length]);
 

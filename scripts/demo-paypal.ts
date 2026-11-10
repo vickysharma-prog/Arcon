@@ -110,4 +110,35 @@ if (!(await alreadyPaid(`unlock:${cafe.id}`))) {
   const s = await pay(cafe, { kind: "unlock", projectId: cafe.id }, 299, "USD", `Arcon: unlock ${cafe.title}`, DEMO_IDS.sam, null);
   console.log("  unlocked with PayPal:", s.ok ? "settled" : s); // settle posts "unlocked the project" in the thread
 }
+// Dates: everything above was written now; put each bill, its note and its payment on the day it happened, so the
+// thread reads in order (billed, then paid two days later; a note right after its bill; the café unlocked the day after
+// it was designed).
+const HOUR = 3_600_000;
+for (const pr of [maya, ...(PAYPAL.mike ? [await project(TITLES.ana, LENA.id)] : [])]) {
+  const { data: ms } = await db.from("milestones").select("id, label, billed_at, status").eq("project_id", pr.id).not("billed_at", "is", null);
+  const { data: msgs } = await db.from("messages").select("id, kind, data, created_at, author_id").eq("project_id", pr.id).gt("created_at", new Date(Date.now() - 6 * HOUR).toISOString()).order("id");
+  for (const m of (ms ?? []) as { id: number; label: string; billed_at: string; status: string }[]) {
+    const billed = new Date(m.billed_at).getTime();
+    const paidAt = Math.min(billed + 2 * 24 * HOUR, Date.now() - HOUR);
+    for (const [i, x] of ((msgs ?? []) as { id: number; kind: string; data: { type?: string; action?: string; label?: string }; author_id: string }[]).entries()) {
+      if (x.kind !== "event" || x.data?.type !== "fee" || x.data.label !== m.label) continue;
+      if (x.data.action === "bill") {
+        await db.from("messages").update({ created_at: new Date(billed).toISOString() }).eq("id", x.id);
+        const next = (msgs ?? [])[i + 1] as { id: number; kind: string } | undefined;
+        if (next?.kind === "message") await db.from("messages").update({ created_at: new Date(billed + 60_000).toISOString() }).eq("id", next.id);
+      }
+      if (x.data.action === "paypal") {
+        await db.from("messages").update({ created_at: new Date(paidAt).toISOString() }).eq("id", x.id);
+        await db.from("milestones").update({ received_at: new Date(paidAt).toISOString() }).eq("id", m.id);
+        await db.from("payments").update({ completed_at: new Date(paidAt).toISOString(), created_at: new Date(paidAt - HOUR).toISOString() }).eq("milestone_id", m.id).eq("status", "completed");
+      }
+    }
+  }
+}
+{
+  const { data: c } = await db.from("projects").select("id, created_at").eq("id", cafe.id).single();
+  const at = new Date(new Date(c!.created_at).getTime() + 26 * HOUR).toISOString();
+  await db.from("messages").update({ created_at: at }).eq("project_id", cafe.id).eq("kind", "event").contains("data", { type: "unlocked" });
+  await db.from("payments").update({ completed_at: at, created_at: at }).eq("project_id", cafe.id).eq("kind", "unlock");
+}
 console.log("demo PayPal ready");
