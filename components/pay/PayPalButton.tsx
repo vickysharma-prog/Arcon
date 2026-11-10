@@ -90,6 +90,12 @@ export function PayPalButton(props: Props) {
       {state === "loading" && <p className="text-sm text-ink-soft">Loading PayPal…</p>}
       {state === "failed" && <p className="text-sm text-red-600">PayPal didn&apos;t load. Check your connection and refresh.</p>}
       <div ref={box} />
+      {/* the sandbox's own test card, so anyone can try a payment (no real money; set NEXT_PUBLIC_PAYPAL_LIVE=1 to hide) */}
+      {state === "ready" && process.env.NEXT_PUBLIC_PAYPAL_LIVE !== "1" && (
+        <p className="mt-2 rounded-lg bg-accent/5 px-3 py-2 text-xs leading-relaxed text-ink-soft">
+          PayPal sandbox, no real money. Choose <span className="text-ink">Debit or Credit Card</span>: <span className="font-mono text-ink">4111 1111 1111 1111</span>, any future date, any 3-digit code, ZIP <span className="font-mono text-ink">94105</span>, phone <span className="font-mono text-ink">415 555 0100</span>.
+        </p>
+      )}
     </div>
   );
 }

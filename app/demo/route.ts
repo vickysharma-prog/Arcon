@@ -4,6 +4,7 @@ import { DEMO_COOKIE, DEMO_IDS } from "@/lib/demo/ids";
 import { DEMO_ROLES, TITLES, type DemoRole } from "@/lib/demo/story";
 import { pathOf, stopAt, switchTo, TOUR, type ProjectKey } from "@/lib/demo/tour";
 import { supabaseAdmin } from "@/lib/supabase/admin";
+import { resetTourPayments } from "@/lib/demo/tourPay";
 
 // The tour's way in: /demo?step=N signs in as the person whose view that stop is and opens it; ?as=lena&from=…
 // switches person on the same page; ?exit leaves (to /start with exit=start). Only the four demo accounts can be
@@ -46,6 +47,8 @@ export async function GET(request: NextRequest) {
     to = pathOf(TOUR[step - 1], ids);
   }
 
+  // a fee a visitor paid in the tour a few minutes ago goes back to billed, so the next visitor can pay it too
+  if (step >= 8 && step <= 10) await resetTourPayments().catch(() => 0);
   const res = go(to);
   const secure = process.env.NODE_ENV === "production";
   res.cookies.set(USER_COOKIE, await signUser(DEMO_IDS[who], process.env.ARCON_SESSION_SECRET ?? ""), { httpOnly: true, secure, sameSite: "lax", path: "/", maxAge: 60 * 60 * 24 });

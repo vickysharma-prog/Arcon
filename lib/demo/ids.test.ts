@@ -11,7 +11,12 @@ test("a demo account can read and see the taste card, but can't change anything"
   assert.equal(refuseDemo(lena, "POST", "/api/projects/53815dca-b4f2-447e-8d78-4e6bffe36c24/fees/77/note"), false);
   assert.equal(refuseDemo(lena, "POST", "/api/projects/53815dca-b4f2-447e-8d78-4e6bffe36c24/fees/77"), true);
   assert.equal(refuseDemo(lena, "POST", "/api/projects/53815dca-b4f2-447e-8d78-4e6bffe36c24/fees/77/note/x"), true);
-  assert.equal(refuseDemo(lena, "POST", "/api/paypal/orders"), true);
+  // paying in the sandbox is open (the route checks who pays); anything else on PayPal isn't
+  assert.equal(refuseDemo(lena, "POST", "/api/paypal/orders"), false);
+  assert.equal(refuseDemo(lena, "POST", "/api/paypal/orders/5O190127TN364715T/capture"), false);
+  assert.equal(refuseDemo(lena, "POST", "/api/paypal/subscriptions"), true);
+  assert.equal(refuseDemo(lena, "PUT", "/api/paypal/payee"), true);
+  assert.equal(refuseDemo(lena, "POST", "/api/projects/53815dca-b4f2-447e-8d78-4e6bffe36c24/fees/77"), true);
   for (const [m, p] of [["POST", "/api/projects/x/site"], ["POST", "/api/projects/x/design"], ["DELETE", "/api/account"], ["POST", "/api/projects/x/team"], ["PATCH", "/api/profile"], ["POST", "/api/interview"]])
     assert.equal(refuseDemo(lena, m, p), true, `${m} ${p}`);
 });

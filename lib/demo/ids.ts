@@ -22,6 +22,10 @@ const OPEN = [
   { method: "POST", path: "/api/interview/taste" },
   { method: "DELETE", path: "/api/session" },
   { method: "POST", path: /^\/api\/projects\/[0-9a-f-]{36}\/fees\/\d+\/note$/ },
+  // paying a billed fee in PayPal's sandbox, as Maya: the orders route still checks she is the one paying, and the tour
+  // puts the fee back to billed a few minutes later (lib/demo/tourPay.ts)
+  { method: "POST", path: "/api/paypal/orders" },
+  { method: "POST", path: /^\/api\/paypal\/orders\/[A-Z0-9]{10,30}\/capture$/ },
 ];
 
 /** Whether a request from this user must be refused: anything but reading, for a demo account. */
