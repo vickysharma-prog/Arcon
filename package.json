@@ -1,10 +1,10 @@
 {
   "name": "arcon",
   "version": "0.1.0",
-  "description": "Arcon: an AI architect with taste. Agents grounded in the Qloo taste graph design a home or business from what its people love, then run the whole project to the keys.",
+  "description": "Arcon: an AI architect with taste. Agents grounded in a taste graph design a home or business from what its people love, then run the whole project to the keys, with payments by PayPal.",
   "keywords": [
-    "qloo",
-    "qloo-api",
+    "taste-graph",
+    "paypal",
     "taste-graph",
     "agentic",
     "ai-agent",
