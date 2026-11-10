@@ -121,16 +121,24 @@ export function FeeLedger({ lines, totals, pro }: { lines: LedgerLine[]; totals:
                 <td className="px-4 py-3 text-right font-mono">{money(l.amount, l.currency)}</td>
                 <td className="px-4 py-3">
                   <span className={`rounded-full border px-2 py-0.5 text-xs ${TONE[l.status]}`}>{STATUS_LABEL[l.status]}</span>
+                  {l.payment_id ? <span className="ml-2 text-xs text-leaf">via PayPal</span> : null}
                   {l.waiting !== null && <span className={`ml-2 text-xs ${l.overdue ? "text-red-600" : "text-ink-soft"}`}>{l.waiting}d</span>}
                 </td>
                 <td className="px-4 py-3">
                   {l.actions.length ? (
                     <span className="flex flex-wrap gap-1.5">
-                      {l.actions.map((a) => (
+                      {l.actions.map((a) =>
+                        // billing happens on the project, where Arcon drafts the note that goes with the bill
+                        a === "bill" ? (
+                          <Link key={a} href={`/project/${l.project_id}?tab=overview#fees`} className="glow-btn rounded-full px-3 py-1 text-xs">
+                            Bill…
+                          </Link>
+                        ) : (
                         <button key={a} disabled={!!busy} onClick={() => act(`${l.id}`, [`/api/projects/${l.project_id}/fees/${l.id}`, { action: a }])} className="glow-btn rounded-full px-3 py-1 text-xs disabled:opacity-60">
                           {busy === `${l.id}` ? "…" : ACTION[a]}
                         </button>
-                      ))}
+                        ),
+                      )}
                     </span>
                   ) : (
                     <span className="text-xs text-ink-soft">{l.next}</span>

@@ -40,7 +40,7 @@ export async function sitesRunBy(projects: (LedgerProject & { location?: string 
 /** Every fee across this person's projects, from their side. */
 export async function feeLedger(projects: LedgerProject[], me: string) {
   const ids = projects.map((p) => p.id);
-  const rows = ids.length ? await must<FeeRow[]>(db().from("milestones").select("id, project_id, label, amount, currency, status, billed_at, created_by").in("project_id", ids).order("position")) : [];
+  const rows = ids.length ? await must<FeeRow[]>(db().from("milestones").select("id, project_id, label, amount, currency, status, billed_at, created_by, payment_id").in("project_id", ids).order("position")) : [];
   const out = ledger(rows, projects, Date.now(), me);
   // who each fee is paid to, for the one paying
   const pros = [...new Set(rows.map((r) => r.created_by).filter((x): x is string => !!x))];
