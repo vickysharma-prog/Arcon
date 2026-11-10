@@ -52,8 +52,8 @@ Money in Arcon follows the project. Each person pays, or gets paid, at the point
 
 **Try a payment yourself (sandbox, no real money):**
 
-1. Open the tour at [arcon-ten.vercel.app/demo](https://arcon-ten.vercel.app/demo) and look at Maya's house as Lena, the architect, or as Maya. Lena's first fee shows as paid via PayPal, and the next one waits with the note Arcon drafted.
-2. Then press "Try it yourself", design your own space, sign up with your email (Arcon sends a confirmation link; your design comes with you), and open the budget step. Pay with **"Debit or Credit Card"** using PayPal's sandbox test card `4111 1111 1111 1111`, any future expiry, any 3-digit code, any name, ZIP `94105` and phone `415 555 0100`. The project unlocks the moment it goes through. A PayPal sandbox personal account works as well.
+1. Open the tour at [arcon-ten.vercel.app/demo](https://arcon-ten.vercel.app/demo) (no sign-up). At stop 9, "Fees, paid with PayPal", press **Pay with PayPal** on Maya's billed fee and pay it: it goes straight to the architect's sandbox PayPal and settles on the project at once. Ask "What is this for?" first and Arcon's agent explains the fee. The fee is billed again a few minutes later for the next visitor.
+2. Then press "Try it yourself", design your own space (no account needed), and open the budget step. Pay with **"Debit or Credit Card"** using PayPal's sandbox test card `4111 1111 1111 1111`, any future expiry, any 3-digit code, any name, ZIP `94105` and phone `415 555 0100`. The project unlocks the moment it goes through. A PayPal sandbox personal account works as well.
 
 **Checked:** unit tests for every rule above (`lib/paypal/*.test.ts`, `lib/project/feeNotes.test.ts`), and `scripts/paypal-check.ts`, which runs against the PayPal sandbox and the database. It pays a fee into the architect's PayPal, settles it once, refuses a second payment, unlocks a project, and refuses a payment for the wrong amount.
 

@@ -46,7 +46,7 @@ export default function Done() {
       <Reveal delay={0.6}>
         <div className="mt-9 flex max-w-2xl flex-col items-center text-center">
           <h2 className="font-serif text-3xl">Now design your own.</h2>
-          <p className="mt-3 text-ink-soft">Any home or business, in any language. Your style, three plans and the 3D from outside are free with no sign-in; sign in and unlock the rest with one PayPal payment. Every answer, plan, change and payment stays on one record that everyone on the project can follow.</p>
+          <p className="mt-3 text-ink-soft">Any home or business, in any language. Your style, three plans and the 3D from outside are free; unlock the rest with one PayPal payment. No account needed. Every answer, plan, change and payment stays on one record that everyone on the project can follow.</p>
           <p className="mt-3 rounded-xl border border-accent/30 bg-accent/5 px-4 py-2.5 text-sm text-ink-soft">
             PayPal runs in its sandbox here, so no real money moves. Pay with <span className="text-ink">Debit or Credit Card</span> using{" "}
             <span className="font-mono text-ink">4111 1111 1111 1111</span>, any future expiry and any 3-digit code, ZIP <span className="font-mono text-ink">94105</span>, phone <span className="font-mono text-ink">415 555 0100</span>.
