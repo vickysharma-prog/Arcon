@@ -58,7 +58,8 @@ export function orderBody(o: OrderInput) {
         ...(o.payeeEmail ? { payee: { email_address: o.payeeEmail } } : {}),
       },
     ],
-    payment_source: { paypal: { experience_context: { brand_name: "Arcon", shipping_preference: "NO_SHIPPING", user_action: "PAY_NOW" } } },
+    // no payment_source: PayPal's buttons pick it (PayPal, Pay Later or a card), and naming one would turn the others away
+    application_context: { brand_name: "Arcon", shipping_preference: "NO_SHIPPING", user_action: "PAY_NOW" },
   };
 }
 
