@@ -2,7 +2,11 @@
 export const FAQ: { q: string; a: string }[] = [
   {
     q: "What does Arcon cost?",
-    a: "Trying it is free: the interview, your style and the three plans. A home or business project is unlocked once for $149 ($299 for a business), with the 3D walkthrough, budget, shopping list, changes by chat, the drawings pack and sharing. Architects and designers pay $99 a month for Studio, builders $299 a month for Build, each with 14 days free. Clients invited by their architect pay nothing.",
+    a: "Trying it is free: the interview, your style and the three plans. A home or business project is unlocked once for $149 ($299 for a business), with the 3D walkthrough, budget, shopping list, changes by chat, the drawings pack and sharing. Architects and designers pay $99 a month for Studio, builders $299 a month for Build, each with 14 days free. Clients invited by their architect pay nothing. Every payment goes through PayPal, by PayPal, Pay Later or card.",
+  },
+  {
+    q: "How do I pay my architect or builder?",
+    a: "When your architect or builder bills a stage, it shows on your project with a note on what that stage covered. Press Pay with PayPal: the money goes straight to their PayPal account, never through Arcon, and the fee settles on the project at once. Ask Arcon \"What is this for?\" on any fee for a plain explanation first.",
   },
   {
     q: "Who is Arcon for?",

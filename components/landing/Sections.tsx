@@ -30,7 +30,7 @@ const STEPS = [
   { n: "02", title: "Find your style", body: "Three quick picks: a place, a brand, a film or music. Arcon reads your taste and names your style." },
   { n: "03", title: "Choose a plan", body: "Three floor plans for your plot, each clear about what it does best and what it gives up." },
   { n: "04", title: "Walk through it", body: "Step inside in 3D, by day or by night, with the outside designed from your taste too." },
-  { n: "05", title: "Build it", body: "Budget, drawings, a shopping list, your team and the building site, all in one place." },
+  { n: "05", title: "Build it", body: "Budget, drawings, a shopping list, your team and the building site, all in one place. Pay your architect and builder with PayPal as each stage is done." },
   { n: "06", title: "Move in", body: "Check it room by room, list anything to fix, get the handover pack and warranty, then review your team." },
 ];
 
@@ -261,7 +261,7 @@ export function Features() {
         <Feature delay={0.08} title="A drawings pack" body="Dimensioned plans, all four elevations and door and window schedules, as a PDF and a DXF for CAD.">
           <MiniPlan />
         </Feature>
-        <Feature delay={0.16} title="Your team in one place" body="Invite your architect and builder by link or QR. Talk room by room, approve versions, track fees.">
+        <Feature delay={0.16} title="Your team in one place" body="Invite your architect and builder by link or QR. Talk room by room, approve versions, and pay each fee with PayPal right where it's billed.">
           <div className="flex -space-x-2">
             {["bg-btn", "bg-accent", "bg-leaf"].map((c, i) => (
               <span key={c} className={`h-9 w-9 rounded-full border-2 border-paper ${c}`} style={{ zIndex: 3 - i }} />
@@ -323,8 +323,8 @@ function Cube() {
 const AUDIENCE = [
   { title: "Homeowners", body: "Planning a new build or a big renovation: see it, change it and price it before anyone builds it, then follow the build." },
   { title: "Cafés, hotels, shops and offices", body: "Arcon asks how you run the place, reads your neighbourhood and plans for the crowd you want." },
-  { title: "Architects and designers", body: "Studio tools: new clients in person or by link, three options on day one, your branding on every drawing, fees by milestone." },
-  { title: "Builders", body: "Run the site in Arcon: phases, crew, materials and photo updates your client can follow, while your costs stay yours." },
+  { title: "Architects and designers", body: "Studio tools: new clients in person or by link, three options on day one, your branding on every drawing, and fees by milestone paid straight to your PayPal." },
+  { title: "Builders", body: "Run the site in Arcon: phases, crew, materials and photo updates your client can follow, while your costs stay yours. Each stage is paid to your PayPal as it finishes." },
 ];
 
 export function Audience() {
@@ -439,15 +439,15 @@ export function Faq() {
 const PLANS = [
   { name: "Free", price: "$0", per: "", for: "Anyone, to try it", cta: "Start free", href: "/start", features: ["Your style, read from your taste", "Three floor plans", "The 3D from outside", "The style quiz"] },
   { name: "Project", price: "$149", per: "one time", alt: "$299 for a café, shop, office or hotel", for: "Homeowners and business owners", cta: "Design my space", href: "/start", featured: true, features: ["Walk inside, by day and night", "Budget, timeline and shopping list", "Make changes by chat", "Drawings pack, PDF and DXF", "Your architect and builder on the project", "Follow the building site"] },
-  { name: "Studio", price: "$99", per: "/month", alt: "or $990 a year, two months free", for: "Architects and interior designers", cta: "Start 14-day trial", href: "/login?mode=signup", features: ["Every client project unlocked", "New clients in person or by link", "Your branding on exports", "Fees by milestone", "Clients find you by taste match"] },
-  { name: "Build", price: "$299", per: "/month", alt: "or $2,990 a year", for: "Builders and contractors", cta: "Start 14-day trial", href: "/login?mode=signup", features: ["Site tracking: phases, crew, materials", "Photo updates for clients", "Your costs stay yours", "Design-and-build projects"] },
+  { name: "Studio", price: "$99", per: "/month", alt: "or $990 a year, two months free", for: "Architects and interior designers", cta: "Start 14-day trial", href: "/login?mode=signup", features: ["Every client project unlocked", "New clients in person or by link", "Your branding on exports", "Fees by milestone, paid to your PayPal", "Bills drafted by Arcon from the project", "Clients find you by taste match"] },
+  { name: "Build", price: "$299", per: "/month", alt: "or $2,990 a year", for: "Builders and contractors", cta: "Start 14-day trial", href: "/login?mode=signup", features: ["Site tracking: phases, crew, materials", "Photo updates for clients", "Each stage paid to your PayPal", "Your costs stay yours", "Design-and-build projects"] },
 ];
 
 export function Pricing() {
   return (
     <section id="pricing" className="relative scroll-mt-24 border-t border-line bg-paper-raised/50 py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
-        <Heading eyebrow="Pricing" title="Start free. Pay when you're ready to build." sub="Try it free, pay once per project, or work on every project as a pro. Pro plans start with 14 days free." />
+        <Heading eyebrow="Pricing" title="Start free. Pay when you're ready to build." sub="Try it free, pay once per project, or work on every project as a pro. Pro plans start with 14 days free. Every payment goes through PayPal: PayPal, Pay Later or card." />
         <div className="mt-14 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {PLANS.map((p, i) => (
             <Reveal key={p.name} delay={i * 0.08}>
@@ -531,7 +531,7 @@ export function Footer() {
         <nav aria-label="Arcon" className="grid content-start gap-2 text-sm">
           <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-soft">Arcon</p>
           <Link href="/start" className="w-fit hover:text-accent">Start designing</Link>
-          <a href="/demo" className="w-fit hover:text-accent">Take the tour</a>
+          <a href="/demo" className="w-fit hover:text-accent">For judges: the guided tour</a>
           <Link href="/resources" className="w-fit hover:text-accent">Resources</Link>
           <Link href="/privacy" className="w-fit hover:text-accent">Privacy</Link>
         </nav>

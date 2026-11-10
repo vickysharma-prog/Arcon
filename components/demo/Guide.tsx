@@ -18,7 +18,7 @@ const store = (id: string) => (id.startsWith("tour-") ? sessionStorage : localSt
 
 const GUIDES: Record<string, Tip[]> = {
   "tour-start": [
-    { at: "#judge-pill", title: "Welcome to Arcon", body: "A three-minute tour of Arcon: 13 stops in three chapters. Maya's interview plays by itself, then the tour moves on." },
+    { at: "#judge-pill", title: "Welcome to Arcon", body: "A three-minute tour of Arcon: 14 stops in three chapters. Maya's interview plays by itself, then the tour moves on." },
     { at: "#judge-pill", title: "This pill is your remote", body: "Point at it, or tap it on a phone, to see what each stop shows, whose view it is, and every stop to jump to. Next moves on, and so do the arrow keys." },
   ],
   "tour-app": [

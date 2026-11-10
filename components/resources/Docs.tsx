@@ -133,8 +133,9 @@ const SECTIONS: Section[] = [
         <Steps
           items={[
             "Try it free as a guest: the interview, your style, three plans and the 3D from outside. Sign in to keep the project; it moves to your account with everything in it.",
-            "Unlock the project once (signed in) to open the walkthrough, budget, shopping list, changes by chat and the drawings pack.",
+            "Unlock the project once (signed in) with PayPal, Pay Later or a card, to open the walkthrough, budget, shopping list, changes by chat and the drawings pack.",
             "Invite your architect or builder from Team, by link or QR code. Everyone talks in the project's thread.",
+            "Pay your architect and builder from the project: each billed fee has Pay with PayPal, straight to their account, and \"What is this for?\" for Arcon to explain it from the project first.",
             "When your architect sends the design for review, the plan is right there in the thread: approve it or ask for changes. On your own, you approve it in one step. A change after approval comes to you with what it does to the cost.",
             "Once building starts, follow progress, photos and spending in the Site tab, or run the build yourself.",
             "When the build is finished, walk through it and list anything to fix in Move in; the builder fixes each one and you sign it off. Accept the handover to move in: the warranty starts that day, and you can review your architect and builder.",
@@ -183,7 +184,7 @@ const SECTIONS: Section[] = [
               "Pipeline: every client by stage (getting to know them, design, review, approved, building, moved in), and Waiting on you with what needs you first.",
               "Review and approval: send a version for review; the client approves it or asks for changes in the thread, with the plan in front of them. An approved version is locked: any later change goes to the client as a change request, with what it does to the cost, and is only built once approved. A client who isn't on Arcon? Record their answer from your meeting.",
               "The thread: everyone on the project talks in one place, room by room, with every approval and change on record. A team-only channel opens when a builder joins.",
-              "Fees by milestone: set out your fee once and Arcon splits it into design, approval and handover; change any name or amount. Bill each one, the client marks it paid, you confirm. The fee ledger shows every milestone across projects.",
+              "Fees by milestone, paid with PayPal: connect your PayPal once in your account, set out your fee and Arcon splits it into design, approval and handover. Press Bill and Arcon drafts the note from what happened since your last bill; read it, change it, send it. The client pays with PayPal straight to you and it settles at once. Remind drafts a kind note when one is overdue. Clients paying another way mark it paid and you confirm. The fee ledger shows every milestone across projects.",
               "Your team: invite the builder by link or QR (Team opens on Builder), or let the owner find one through Find a pro.",
               "Your studio: your name and logo on client links, the thread and every drawing; owners find you in Find a pro by how close your past work is to their taste, and your reviews show there after each handover.",
             ]}
@@ -202,7 +203,7 @@ const SECTIONS: Section[] = [
           />
         </Sub>
         <Sub title="What it costs">
-          <p className="mt-2">Studio is $99 a month, or $990 a year (two months free), with 14 days free to start. Every client project is unlocked; your clients pay nothing.</p>
+          <p className="mt-2">Studio is $99 a month, or $990 a year (two months free), with 14 days free to start, paid with PayPal from your account page. Pick a plan during the trial and the first charge waits for the trial to end. Every client project is unlocked; your clients pay nothing.</p>
         </Sub>
       </>
     ),
@@ -231,14 +232,14 @@ const SECTIONS: Section[] = [
               "Materials and deliveries: order, track what's on the way and what's late, and see stock running low.",
               "Site money: each site's budget against what it has cost in labour and materials. Your own costs, wages and margins are never shown to the client.",
               "Updates: post photos and progress from your phone; the client follows the build and the budget.",
-              "Paid by stage of the build: deposit, foundations and structure, electrical and plumbing, finishes and handover, each one editable. Bill each one when it's done; the client marks it paid and you confirm.",
+              "Paid by stage of the build: deposit, foundations and structure, electrical and plumbing, finishes and handover, each one editable. Connect your PayPal once; when a stage is done, press Bill and Arcon drafts the note from the site's record. The client pays with PayPal straight to you and it settles at once.",
               "Moving in: the client lists snags room by room, you fix them, they sign each off. Hand over the pack (warranty, notes and drawings); the client accepts the handover and the warranty starts that day. Their review shows on your profile in Find a pro.",
               "Requests: owners who find you through Find a pro ask you to join. You see their design first, then accept or decline right on the project.",
             ]}
           />
         </Sub>
         <Sub title="What it costs">
-          <p className="mt-2">Build is $299 a month, or $2,990 a year, with 14 days free to start. Every site; your clients pay nothing.</p>
+          <p className="mt-2">Build is $299 a month, or $2,990 a year, with 14 days free to start, paid with PayPal from your account page. Every site; your clients pay nothing.</p>
         </Sub>
       </>
     ),
@@ -293,7 +294,7 @@ const SECTIONS: Section[] = [
     body: (
       <>
         <p>
-          Arcon is a Next.js app (App Router, React, Tailwind) with three.js for the 3D, Supabase for accounts, data and files, a taste graph API for taste, and an AI model for the brief, the room list and changes by chat. The interview is a script that asks one question at a time and never waits on a model; an interviewer agent built with eve (agents/interviewer, with its own tools, instructions and evals) is mounted at /eve/interviewer.
+          Arcon is a Next.js app (App Router, React, Tailwind) with three.js for the 3D, Supabase for accounts, data and files, a taste graph API for taste, PayPal for every payment (Orders, Subscriptions and Webhooks), and an AI model for the brief, the room list, changes by chat and the notes on every bill. The interview is a script that asks one question at a time and never waits on a model; an interviewer agent built with eve (agents/interviewer, with its own tools, instructions and evals) is mounted at /eve/interviewer.
         </p>
         <Code>{`app/          pages and API routes
 components/   screens; components/fx holds the shared sounds and motion
@@ -326,9 +327,13 @@ npm test                      # unit tests`}</Code>
                 ["GET|POST /api/projects/:id/site", "phases, crew, materials, updates"],
                 ["GET|POST /api/projects/:id/team", "who is on it, and invite links by role"],
                 ["POST /api/projects/:id/review", "send for review, approve, ask for changes, answer a change request"],
-                ["GET|POST /api/projects/:id/fees", "fee milestones: set out, bill, paid, received"],
+                ["GET|POST /api/projects/:id/fees", "fee milestones: set out, bill (with a note), remind, paid, received"],
                 ["GET|POST /api/projects/:id/movein", "snags, the handover pack, accepting the handover, reviews"],
-                ["POST /api/projects/:id/unlock", "unlock a project (its owner, signed in)"],
+                ["POST /api/paypal/orders", "a PayPal order to unlock a project or pay a fee; the amount and payee come from Arcon's records"],
+                ["POST /api/paypal/orders/:id/capture", "capture an approved order and open what it paid for, once"],
+                ["POST /api/paypal/subscriptions", "Studio or Build on PayPal: start, confirm, cancel"],
+                ["POST /api/projects/:id/fees/:mid/note", "Arcon drafts the note for a bill, a reminder, or what a fee is for"],
+                ["POST /api/billing/paypal", "PayPal's webhook, verified by PayPal"],
                 ["GET /api/shell", "the sidebar: your tools, counts and projects"],
                 ["GET /api/pros", "find an architect or builder by taste match"],
                 ["POST /api/projects/:id/opening", "set a business's opening day (owner only)"],
