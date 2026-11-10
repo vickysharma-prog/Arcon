@@ -1,4 +1,4 @@
-import { userOf } from "@/lib/auth/request";
+import { accessTo, userOf } from "@/lib/auth/request";
 import { captureOrder, getOrder, PayPalError } from "@/lib/paypal/client";
 import { paymentForOrder, settleOrder, stillOwed } from "@/lib/paypal/settle";
 
@@ -7,10 +7,13 @@ import { paymentForOrder, settleOrder, stillOwed } from "@/lib/paypal/settle";
 // got there first) is read back instead of failing.
 export async function POST(request: Request, ctx: RouteContext<"/api/paypal/orders/[orderId]/capture">) {
   const { orderId } = await ctx.params;
-  const me = await userOf(request.headers.get("cookie"));
-  if (!me || !/^[A-Z0-9]{10,30}$/.test(orderId)) return Response.json({ error: "not found" }, { status: 404 });
+  const cookie = request.headers.get("cookie");
+  const me = await userOf(cookie);
+  if (!/^[A-Z0-9]{10,30}$/.test(orderId)) return Response.json({ error: "not found" }, { status: 404 });
   const row = await paymentForOrder(orderId);
-  if (!row || row.payer_id !== me) return Response.json({ error: "not found" }, { status: 404 });
+  // the one who started it: the signed-in payer, or for a guest's unlock, whoever owns that project in this browser
+  const mine = row && (row.payer_id ? row.payer_id === me : row.kind === "unlock" && !!row.project_id && (await accessTo(row.project_id, cookie, "edit"))?.role === "owner");
+  if (!row || !mine) return Response.json({ error: "not found" }, { status: 404 });
 
   // paid already another way (another tab, the manual route, or it was unlocked meanwhile): don't take the money twice
   if (row.status === "created" && !(await stillOwed(row))) return Response.json({ error: "This is already paid, so nothing was charged." }, { status: 409 });

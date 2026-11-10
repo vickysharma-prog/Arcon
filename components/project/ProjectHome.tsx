@@ -238,7 +238,7 @@ export function Unlock({ p, role, onUnlocked, lead }: { p: Pick<Home, "id" | "sp
     return (
       <motion.section initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} className="rounded-2xl border border-leaf/40 bg-leaf/5 p-5" role="status">
         <p className="font-serif text-2xl text-leaf">✓ Unlocked</p>
-        <p className="mt-1 text-sm text-ink-soft">Everything is open: the walk inside, the budget, the shopping list, Make changes, every download and your team.</p>
+        <p className="mt-1 text-sm text-ink-soft">Everything is open: the walk inside, the budget, the shopping list, Make changes, every download and your team. Sign in any time to keep it on every device; it comes with you.</p>
       </motion.section>
     );
   return (

@@ -20,10 +20,12 @@ export async function POST(request: Request) {
   if (!paypalReady()) return no("Payments aren't set up yet.", 503);
   const cookie = request.headers.get("cookie");
   const me = await userOf(cookie);
-  if (!me) return Response.json({ error: "Sign in first, so the payment is saved to your account.", signIn: true }, { status: 401 });
   const body = Body.safeParse(await request.json().catch(() => null));
   if (!body.success) return no("That wasn't understood.", 400);
   const b = body.data;
+  // A guest can unlock the design they made without an account (it comes with them if they sign in later); paying a
+  // pro's fee needs an account, since it sits on a shared project.
+  if (!me && b.for !== "unlock") return Response.json({ error: "Sign in first, so the payment is saved to your account.", signIn: true }, { status: 401 });
 
   let purpose: Purpose, amount: number, currency: string, description: string, payeeEmail: string | null = null;
   if (b.for === "unlock") {
@@ -54,7 +56,7 @@ export async function POST(request: Request) {
   if (await alreadyPaid(purposeId(purpose))) return no("This is already paid.", 409);
   try {
     const order = await createOrder({ purpose, amount, currency, description, payeeEmail });
-    await recordOrder({ purpose, orderId: order.id, amount, currency, payerId: me, projectId: b.projectId, payeeEmail });
+    await recordOrder({ purpose, orderId: order.id, amount, currency, payerId: me ?? null, projectId: b.projectId, payeeEmail });
     return Response.json({ id: order.id }, { status: 201 });
   } catch {
     return no("PayPal couldn't start the payment. Try again in a moment.", 502);

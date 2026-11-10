@@ -21,7 +21,7 @@ export type PaymentRow = {
   status: "created" | "completed" | "failed" | "refunded";
 };
 
-export async function recordOrder(r: { purpose: Purpose; orderId: string; amount: number; currency: string; payerId: string; projectId: string | null; payeeEmail?: string | null }) {
+export async function recordOrder(r: { purpose: Purpose; orderId: string; amount: number; currency: string; payerId: string | null; projectId: string | null; payeeEmail?: string | null }) {
   const { error } = await supabaseAdmin()
     .from("payments")
     .insert({
@@ -83,7 +83,7 @@ export async function settleOrder(order: CapturedOrder): Promise<Settled> {
   if (!moved?.length) return { ok: true, kind: row.kind, already: true };
 
   const project = row.project_id ? await getProject(row.project_id).catch(() => null) : null;
-  const actor = { id: row.payer_id, name: row.payer_id ? await nameOf(row.payer_id) : "Someone" };
+  const actor = { id: row.payer_id, name: row.payer_id ? await nameOf(row.payer_id) : "The owner" };
   const amount = money(Number(row.amount), row.currency);
   if (cap.purpose.kind === "unlock" && project) {
     await unlockProject(project.id);
