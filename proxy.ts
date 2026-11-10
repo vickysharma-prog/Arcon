@@ -11,7 +11,10 @@ export async function proxy(request: NextRequest) {
   if (process.env.ARCON_DEMO_SEED !== "1" && refuseDemo(user, request.method, request.nextUrl.pathname)) return NextResponse.json({ error: VIEW_ONLY }, { status: 403, headers: { "x-arcon-demo": "view-only" } });
   // Starting a design of their own after the tour (a plain /start, not the tour's replay) leaves the tour, the same way
   // its Try it yourself does: out of the demo account, and no tour bar over their own design.
-  if (request.nextUrl.pathname === "/start" && request.nextUrl.searchParams.get("demo") !== "1" && request.cookies.has(DEMO_COOKIE))
+  // Only a real visit counts: the app prefetches /start (the sidebar's New design) on every page, and following that
+  // prefetch out of the tour would sign the visitor out mid-tour.
+  const prefetch = request.headers.has("next-router-prefetch") || request.headers.has("next-router-segment-prefetch") || /prefetch/i.test(request.headers.get("sec-purpose") ?? request.headers.get("purpose") ?? "");
+  if (!prefetch && request.nextUrl.pathname === "/start" && request.nextUrl.searchParams.get("demo") !== "1" && request.cookies.has(DEMO_COOKIE))
     return NextResponse.redirect(new URL("/demo?exit=start", request.url));
   // Someone signed in opens the app, not the landing page: their projects.
   if (request.nextUrl.pathname === "/" && !request.nextUrl.search && user) return NextResponse.redirect(new URL("/home", request.url));

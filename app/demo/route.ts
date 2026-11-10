@@ -12,6 +12,9 @@ export async function GET(request: NextRequest) {
   const q = request.nextUrl.searchParams;
   const go = (path: string) => NextResponse.redirect(new URL(path, request.url));
 
+  // a prefetch never leaves the tour (see proxy.ts): only a visit the person made does
+  const prefetch = request.headers.has("next-router-prefetch") || request.headers.has("next-router-segment-prefetch") || /prefetch/i.test(request.headers.get("sec-purpose") ?? request.headers.get("purpose") ?? "");
+  if (q.has("exit") && prefetch) return new Response(null, { status: 204 });
   if (q.has("exit")) {
     const start = q.get("exit") === "start";
     const res = go(start ? "/start" : "/?site");
