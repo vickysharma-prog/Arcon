@@ -16,14 +16,16 @@ export const DEMO_COOKIE = "arcon_demo";
 
 export const VIEW_ONLY = "This is the demo, so it's view only. Sign up free to try it on your own project.";
 
-// What a demo session may still send: the interview's live taste card, and signing out.
+// What a demo session may still send: the interview's live taste card, signing out, and asking Arcon's agent for a fee
+// note (a bill's note, a reminder, what a fee is for), which drafts words and saves nothing; sending one stays refused.
 const OPEN = [
   { method: "POST", path: "/api/interview/taste" },
   { method: "DELETE", path: "/api/session" },
+  { method: "POST", path: /^\/api\/projects\/[0-9a-f-]{36}\/fees\/\d+\/note$/ },
 ];
 
 /** Whether a request from this user must be refused: anything but reading, for a demo account. */
 export function refuseDemo(userId: string | null, method: string, path: string): boolean {
   if (!userId || !IDS.has(userId) || method === "GET" || method === "HEAD") return false;
-  return !OPEN.some((o) => o.method === method && path === o.path);
+  return !OPEN.some((o) => o.method === method && (typeof o.path === "string" ? path === o.path : o.path.test(path)));
 }
